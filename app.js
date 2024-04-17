@@ -1,11 +1,19 @@
-const mongoose = require ("mongoose");
-const express = require ("express");
-const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
-const dotenv = require("dotenv");
+import mongoose from "mongoose";
+import express from "express";
+import session from "express-session";
+import connectMongoDBSession from "connect-mongodb-session";
+import dotenv from "dotenv";
+import cors from "cors";
+import User from "./model.js";
+
 dotenv.config();
+
+const MongoDBStore = connectMongoDBSession(session);
+
 const port = 8000;
 
+const app = express();
+app.use(cors());
 
 // Middleware
 app.use(express.json());
@@ -24,6 +32,19 @@ app.use(
     store: store,
   })
 );
+
+// Get all users
+app.get("/users", async (req, resp) => {
+  const users = await User.find();
+  resp.status(200).json(users);
+});
+
+// Create a new user
+app.post("/users", async (req, resp) => {
+  const user = new User(req.body);
+  const createdUser = await user.save();
+  resp.status(201).json(createdUser);
+});
 
 // MongoDB Connection
 mongoose
