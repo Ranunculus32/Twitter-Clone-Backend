@@ -1,18 +1,22 @@
-const mongoose = require ("mongoose");
-const express = require ("express");
-const app = express();
-const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
-const dotenv = require("dotenv");
-dotenv.config();
-const port = 8000;
+import mongoose from "mongoose";
+import express from "express";
+import session from "express-session";
+import MongoDBStore from "connect-mongodb-session";
+import userRouter from "./routers/user_router.js";
+import dotenv from "dotenv";
 
+const app = express();
+const port = 4000;
+dotenv.config();
+
+// MongoDBStore with session
+const MongoDBStoreSession = MongoDBStore(session);
 
 // Middleware
 app.use(express.json());
 
 // Session and Flash Middleware
-const store = new MongoDBStore({
+const store = new MongoDBStoreSession({
   uri: process.env.MONGODB_URL,
   collection: "sessions",
 });
@@ -22,9 +26,12 @@ app.use(
     secret: process.env.secretKey,
     resave: false,
     saveUninitialized: true,
-    store: store,
+    store,
   })
 );
+
+// Routes
+app.use("/users", userRouter);
 
 // MongoDB Connection
 mongoose
@@ -36,3 +43,5 @@ mongoose
 app.listen(port, () =>
   console.log(`Backend server is running on port ${port}!`)
 );
+
+export default app;
