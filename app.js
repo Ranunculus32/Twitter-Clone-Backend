@@ -4,7 +4,7 @@ import session from "express-session";
 import connectMongoDBSession from "connect-mongodb-session";
 import dotenv from "dotenv";
 import cors from "cors";
-import Post from "./model.js";
+import Post from "./Post.js";
 
 dotenv.config();
 
