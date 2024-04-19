@@ -33,18 +33,29 @@ app.use(
   })
 );
 
-// Get all users
-app.get("/users", async (req, resp) => {
-  const users = await User.find();
-  resp.status(200).json(users);
+// Route to create a new post
+app.post('/posts', async (req, res) => {
+  try {
+    const { author, content } = req.body;
+    const post = new Post({ author, content });
+    const savedPost = await post.save();
+    res.status(201).json(savedPost);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
-// Create a new user
-app.post("/users", async (req, resp) => {
-  const user = new User(req.body);
-  const createdUser = await user.save();
-  resp.status(201).json(createdUser);
+// Route to get all posts
+app.get('/posts', async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
+
+
 
 // MongoDB Connection
 mongoose
