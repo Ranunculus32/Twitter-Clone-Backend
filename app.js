@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import userRoutes from "./routes/UserRoute.js"
 import searchRoute from "./routes/SearchRoute.js"
+import postsRoute from "./routes/PostRoute.js"
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/', userRoutes);
 app.use('/api', searchRoute);
+app.use('/feed', postsRoute);
 
 // Session and Flash Middleware
 const store = new MongoDBStore({
