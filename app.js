@@ -4,7 +4,8 @@ import session from "express-session";
 import connectMongoDBSession from "connect-mongodb-session";
 import dotenv from "dotenv";
 import cors from "cors";
-import User from "./model.js";
+import userRoutes from "./routes/UserRoute.js"
+import searchRoute from "./routes/SearchRoute.js"
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ app.use(cors());
 
 // Middleware
 app.use(express.json());
+app.use('/', userRoutes);
+app.use('/api', searchRoute);
 
 // Session and Flash Middleware
 const store = new MongoDBStore({
@@ -33,18 +36,9 @@ app.use(
   })
 );
 
-// Get all users
-app.get("/users", async (req, resp) => {
-  const users = await User.find();
-  resp.status(200).json(users);
-});
 
-// Create a new user
-app.post("/users", async (req, resp) => {
-  const user = new User(req.body);
-  const createdUser = await user.save();
-  resp.status(201).json(createdUser);
-});
+
+
 
 // MongoDB Connection
 mongoose
@@ -52,7 +46,11 @@ mongoose
   .then(() => console.log("DB Connection Successful!"))
   .catch((err) => console.log(err));
 
+
+
 // Start the server
 app.listen(port, () =>
   console.log(`Backend server is running on port ${port}!`)
 );
+
+
