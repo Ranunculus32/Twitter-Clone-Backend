@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import User from ("../models/user_model");
+import User from "../models/user_model.js";
 
 const generateUserId = () => {
   const timestamp = Date.now().toString(36);
@@ -52,37 +52,46 @@ export const isAuthenticatedUser = async (req, res, next) => {
 
     const user = await User.findOne({ username });
 
+    if (!user) {
+      // Delay response to prevent username enumeration attacks
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      return res.status(401).json({
+        success: false,
+        message: "Incorrect username or password",
+      });
+    }
+
     console.log("User found in the database:", user);
 
-    if (user) {
-      console.log("Hashed password during login:", user.password);
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
 
-      const isPasswordMatched = await bcrypt.compare(
-        password.trim(),
-        user.password
+    if (!isPasswordMatched) {
+      // Delay response to prevent brute-force attacks
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      console.error(
+        "Incorrect password. Hashed:",
+        user.password,
+        "Input:",
+        password
       );
 
-      if (isPasswordMatched) {
-        req.session.user = { username, userId: user.userId };
-        // Handle successful authentication, maybe respond with a token
-        res.status(200).json({ success: true, message: "Login successful" });
-      } else {
-        console.error(
-          "Incorrect password. Hashed:",
-          user.password,
-          "Input:",
-          password.trim()
-        );
-        res.status(401).json({ success: false, message: "Incorrect password" });
-      }
-    } else {
-      res.status(404).json({ success: false, message: "User not found" });
+      return res.status(401).json({
+        success: false,
+        message: "Incorrect username or password",
+      });
     }
+
+    // Authentication successful
+    req.session.user = { username, userId: user.userId };
+    res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {
     console.error("Error during user authentication:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Server error upon login" });
+    res.status(500).json({
+      success: false,
+      message: "Server error upon login",
+    });
   }
 };
 
