@@ -3,7 +3,7 @@ import mongoose,{Schema}  from "mongoose";
 // Define the schema for a post
 const postSchema = new mongoose.Schema({
   author: {
-    type: String,
+    type: mongoose.Types.ObjectId,
     ref: 'User', // Reference to the User model for the author
   },
  text: {
@@ -12,10 +12,7 @@ const postSchema = new mongoose.Schema({
     maxlength: 280 
   },
 
-  gifUrl: {
-    type: String,
-    required: false // This makes the gifUrl optional since not every post might have a GIF.
-  }
+
 
 
   
