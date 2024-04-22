@@ -4,7 +4,7 @@ import session from "express-session";
 import connectMongoDBSession from "connect-mongodb-session";
 import dotenv from "dotenv";
 import cors from "cors";
-import Post from "./Post.js";
+import Post from "./model/Post.js";
 
 dotenv.config();
 
@@ -34,26 +34,22 @@ app.use(
 );
 
 // Route to create a new post
-app.post('/posts', async (req, res) => {
-  try {
-    const { author, content } = req.body;
-    const post = new Post({ author, content });
-    const savedPost = await post.save();
-    res.status(201).json(savedPost);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+app.post('/posts', (req, res) => {
+  const newPost = new Post({
+      author: req.body.author,
+      text: req.body.text
+  });
+
+  newPost.save().then(post => res.json(post));
 });
 
-// Route to get all posts
-app.get('/posts', async (req, res) => {
-  try {
-    const posts = await Post.find();
-    res.json(posts);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+// Get Posts Route
+app.get('/posts', (req, res) => {
+  Post.find()
+      .sort({ date: -1 })
+      .then(posts => res.json(posts));
 });
+
 
 
 
