@@ -11,6 +11,13 @@ const postSchema = new mongoose.Schema({
     required: true,
     maxlength: 280 
   },
+
+  gifUrl: {
+    type: String,
+    required: false // This makes the gifUrl optional since not every post might have a GIF.
+  }
+
+
   
 });
 
