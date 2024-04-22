@@ -83,7 +83,6 @@ export const isAuthenticatedUser = async (req, res, next) => {
       });
     }
 
-    // Authentication successful
     req.session.user = { username, userId: user.userId };
     res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {

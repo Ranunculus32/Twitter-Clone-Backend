@@ -10,17 +10,25 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  userId: {
+  email: {
     type: String,
     required: true,
     unique: true,
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
+  profession: {
+    type: String,
+    required: true,
+  },
+  hometown: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
-const User = mongoose.model("User", userSchema); 
+const User = mongoose.model("User", userSchema);
 
-export default User; 
+export default User;
