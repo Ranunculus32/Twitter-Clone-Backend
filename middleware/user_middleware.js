@@ -1,14 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/user_model.js";
 
-const generateUserId = () => {
-  const timestamp = new Date().getTime();
-  const randomString = Math.random().toString(36).substring(2, 8);
-  const userId = timestamp.toString() + randomString;
-
-  return userId;
-};
-
 export const isRegisterUser = async (req, res, next) => {
   try {
     const { username, password, email, profession, hometown } = req.body;
@@ -99,7 +91,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
       });
     }
 
-    req.session.user = { username, userId: user.userId };
+    req.session.user = { username, userId: user._id };
     res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {
     console.error("Error during user authentication:", error);
