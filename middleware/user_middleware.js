@@ -3,13 +3,22 @@ import User from "../models/user_model.js";
 
 export const isRegisterUser = async (req, res, next) => {
   try {
-    const { username, password, email, profession, hometown } = req.body;
+    const {
+      username,
+      password,
+      email,
+      fullName,
+      profession,
+      hometown,
+      description,
+      website,
+    } = req.body;
 
-    // Validate email field
-    if (!email) {
+    // Validate required fields
+    if (!email || !fullName || !password || !description || !website) {
       return res.status(400).json({
         success: false,
-        message: "Email is required.",
+        message: "All required fields must be provided.",
       });
     }
 
@@ -32,8 +41,11 @@ export const isRegisterUser = async (req, res, next) => {
       username,
       password: hashedPassword,
       email,
+      fullName,
       profession,
       hometown,
+      description,
+      website,
       createdAt: new Date(),
     });
 

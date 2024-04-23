@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -15,12 +16,32 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  fullName: {
+    type: String,
+    required: true,
+  },
   profession: {
     type: String,
   },
   hometown: {
     type: String,
   },
+  description: {
+    type: String,
+    maxlength: 300, // Maximum 300 characters
+    required: true,
+  },
+  website: {
+    type: String,
+   
+  },
+  followers: {
+    type: [],
+  },
+  following: {
+    type: [],
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
@@ -30,3 +51,5 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 export default User;
+
+
