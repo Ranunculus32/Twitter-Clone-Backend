@@ -17,11 +17,9 @@ const userSchema = new mongoose.Schema({
   },
   profession: {
     type: String,
-    required: true,
   },
   hometown: {
     type: String,
-    required: true,
   },
   createdAt: {
     type: Date,
