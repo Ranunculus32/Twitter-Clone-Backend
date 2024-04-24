@@ -1,6 +1,17 @@
 import mongoose from "mongoose";
 import express from "express";
 import session from "express-session";
+import MongoDBStore from "connect-mongodb-session";
+import userRouter from "./routers/user_router.js";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
+
+const app = express();
+const port = 4000;
+dotenv.config();
+
+// MongoDBStore with session
+const MongoDBStoreSession = MongoDBStore(session);
 import connectMongoDBSession from "connect-mongodb-session";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -16,10 +27,11 @@ const app = express();
 app.use(cors());
 
 // Middleware
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
+app.use(bodyParser.json()); // Parse application/json
 
 // Session and Flash Middleware
-const store = new MongoDBStore({
+const store = new MongoDBStoreSession({
   uri: process.env.MONGODB_URL,
   collection: "sessions",
 });
@@ -29,9 +41,12 @@ app.use(
     secret: process.env.secretKey,
     resave: false,
     saveUninitialized: true,
-    store: store,
+    store,
   })
 );
+
+// Routes
+app.use("/users", userRouter);
 
 // Get all users
 app.get("/users", async (req, resp) => {
@@ -46,6 +61,7 @@ app.post("/users", async (req, resp) => {
   resp.status(201).json(createdUser);
 });
 
+
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URL)
@@ -56,3 +72,8 @@ mongoose
 app.listen(port, () =>
   console.log(`Backend server is running on port ${port}!`)
 );
+
+
+export default app;
+
+
