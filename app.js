@@ -7,7 +7,18 @@ import searchRoute from "./routers/SearchRoute.js";
 import postsRoute from "./routers/PostRoute.js";
 import Post from "./model/Post.js";
 import dotenv from "dotenv";
+<<<<<<< HEAD
 import bodyParser from "body-parser";
+=======
+import cors from "cors";
+import Post from "./model/Post.js";
+
+dotenv.config();
+
+const MongoDBStore = connectMongoDBSession(session);
+
+const port = 8000;
+>>>>>>> 45a30cda8ccc3e62285e5c9d1979c1161231fbcd
 
 const app = express();
 const port = 4000;
@@ -36,6 +47,7 @@ app.use(
   })
 );
 
+<<<<<<< HEAD
 // Routes
 app.use("/users", userRouter);
 /* app.use('/', userRoutes); */
@@ -47,6 +59,13 @@ app.post('/posts', (req, res) => {
   const newPost = new Post({
     author: req.body.author,
     text: req.body.text
+=======
+// Route to create a new post
+app.post('/posts', (req, res) => {
+  const newPost = new Post({
+      author: req.body.author,
+      text: req.body.text
+>>>>>>> 45a30cda8ccc3e62285e5c9d1979c1161231fbcd
   });
 
   newPost.save().then(post => res.json(post));
@@ -55,11 +74,21 @@ app.post('/posts', (req, res) => {
 // Get Posts Route
 app.get('/posts', (req, res) => {
   Post.find()
+<<<<<<< HEAD
     .sort({ date: -1 })
     .then(posts => res.json(posts));
 });
 
 
+=======
+      .sort({ date: -1 })
+      .then(posts => res.json(posts));
+});
+
+
+
+
+>>>>>>> 45a30cda8ccc3e62285e5c9d1979c1161231fbcd
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URL)
