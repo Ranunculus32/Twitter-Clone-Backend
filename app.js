@@ -12,6 +12,19 @@ dotenv.config();
 
 // MongoDBStore with session
 const MongoDBStoreSession = MongoDBStore(session);
+import connectMongoDBSession from "connect-mongodb-session";
+import dotenv from "dotenv";
+import cors from "cors";
+import User from "./model.js";
+
+dotenv.config();
+
+const MongoDBStore = connectMongoDBSession(session);
+
+const port = 8000;
+
+const app = express();
+app.use(cors());
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
@@ -35,6 +48,20 @@ app.use(
 // Routes
 app.use("/users", userRouter);
 
+// Get all users
+app.get("/users", async (req, resp) => {
+  const users = await User.find();
+  resp.status(200).json(users);
+});
+
+// Create a new user
+app.post("/users", async (req, resp) => {
+  const user = new User(req.body);
+  const createdUser = await user.save();
+  resp.status(201).json(createdUser);
+});
+
+
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URL)
@@ -46,4 +73,7 @@ app.listen(port, () =>
   console.log(`Backend server is running on port ${port}!`)
 );
 
+
 export default app;
+
+
