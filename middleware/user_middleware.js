@@ -124,3 +124,80 @@ export const logoutUser = (req, res, next) => {
     }
   });
 };
+
+//function to get all users
+export const getAllUsers = async (req, resp) => {
+  const users = await User.find();
+  resp.status(200).json(users);
+};
+
+//function to get a user
+export const getOneUser = async (req, resp) => {
+  const { id } = req.params;
+  const user = await User.findOne({ _id: id });
+  resp.status(200).json(user);
+};
+
+//function to post a user
+export const postAUser = async (req, resp) => {
+  const user = new User(req.body);
+  try {
+    const createdUser = await user.save();
+    resp.status(201).json(createdUser);
+  } catch (error) {
+    console.error("Error creating new user:", error);
+    resp.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//function to get followers
+export const getAllFollowers = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the user by id
+    const foundedUser = await User.findById(id);
+
+    if (!foundedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // get all followers from the founded user
+    const followers = foundedUser.followers;
+
+    res.json(followers);
+  } catch (error) {
+    console.error("Error fetching followers:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//function to get following
+export const getAllFollowing = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the user by id
+    const foundedUser = await User.findById(id);
+
+    if (!foundedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // get all following from the founded user
+    const following = foundedUser.following;
+
+    res.json(following);
+  } catch (error) {
+    console.error("Error fetching following:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//function to update a user
+export const updateUser = async (req, resp) => {
+  const { id } = req.params;
+  await User.updateMany({ _id: id }, req.body);
+  const updatedUser = await User.findById(id);
+  resp.status(200).json(updatedUser);
+};

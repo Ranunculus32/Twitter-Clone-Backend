@@ -7,8 +7,8 @@ import searchRoute from "./routers/SearchRoute.js";
 import postsRoute from "./routers/PostRoute.js";
 import commentsRoute from "./routers/CommentRoute.js";
 import dotenv from "dotenv";
-import cors from "cors"
 import bodyParser from "body-parser";
+import cors from "cors";
 
 const app = express();
 const port = 4000;
@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // Parse application/json
 app.use(cors());
 
+app.use(cors());
 
 // Session and Flash Middleware
 const store = new MongoDBStoreSession({
