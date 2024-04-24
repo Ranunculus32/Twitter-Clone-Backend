@@ -4,6 +4,7 @@ import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
 import userRouter from "./routers/user_router.js";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 import cors from "cors";
 
 const app = express();
@@ -14,7 +15,8 @@ dotenv.config();
 const MongoDBStoreSession = MongoDBStore(session);
 
 // Middleware
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
+app.use(bodyParser.json()); // Parse application/json
 app.use(cors());
 
 // Session and Flash Middleware

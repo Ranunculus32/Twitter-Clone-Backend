@@ -1,32 +1,52 @@
 import bcrypt from "bcrypt";
 import User from "../models/user_model.js";
 
-const generateUserId = () => {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 8);
-  return timestamp + random;
-};
-
 export const isRegisterUser = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const {
+      username,
+      password,
+      email,
+      fullName,
+      profession,
+      hometown,
+      description,
+      website,
+    } = req.body;
 
-    const existingUser = await User.findOne({ username });
+    // Validate required fields
+    if (!email || !fullName || !password || !description || !website) {
+      return res.status(400).json({
+        success: false,
+        message: "All required fields must be provided.",
+      });
+    }
+
+    // Check if email is already registered
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "Username is already taken.",
+        message: "Email is already registered.",
       });
     }
 
     console.log("Attempting to register user:", username);
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    console.log("Request Body:", req.body);
+
     const newUser = new User({
       username,
       password: hashedPassword,
-      userId: generateUserId(),
+      email,
+      fullName,
+      profession,
+      hometown,
+      description,
+      website,
+      createdAt: new Date(),
     });
 
     await newUser.save();
@@ -83,7 +103,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
       });
     }
 
-    req.session.user = { username, userId: user.userId };
+    req.session.user = { username, userId: user._id };
     res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {
     console.error("Error during user authentication:", error);
