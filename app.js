@@ -5,6 +5,7 @@ import MongoDBStore from "connect-mongodb-session";
 import userRouter from "./routers/user_router.js";
 import searchRoute from "./routers/SearchRoute.js";
 import postsRoute from "./routers/PostRoute.js";
+import commentsRoute from "./routers/CommentRoute.js";
 import dotenv from "dotenv";
 import cors from "cors"
 import bodyParser from "body-parser";
@@ -17,7 +18,8 @@ dotenv.config();
 const MongoDBStoreSession = MongoDBStore(session);
 
 // Middleware
-app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+/* app.use(bodyParser.urlencoded({ extended: false })); */ // Parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // Parse application/json
 app.use(cors());
 
@@ -42,6 +44,7 @@ app.use("/users", userRouter);
 /* app.use('/', userRoutes); */
 app.use('/api', searchRoute);
 app.use('/feed', postsRoute);
+app.use('/comment', commentsRoute);
 
 
 

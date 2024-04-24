@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+/* import mongoose from "mongoose";
 
 mongoose.set("toJSON", {
     virtuals: true,
@@ -21,4 +21,4 @@ const userSchema = new mongoose.Schema({
     following: [],
 });
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema); */
