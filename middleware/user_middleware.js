@@ -138,18 +138,6 @@ export const getOneUser = async (req, resp) => {
   resp.status(200).json(user);
 };
 
-//function to post a user
-export const postAUser = async (req, resp) => {
-  const user = new User(req.body);
-  try {
-    const createdUser = await user.save();
-    resp.status(201).json(createdUser);
-  } catch (error) {
-    console.error("Error creating new user:", error);
-    resp.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
 //function to get followers
 export const getAllFollowers = async (req, res) => {
   const { id } = req.params;

@@ -6,6 +6,7 @@ import userRouter from "./routers/user_router.js";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
+import TweetsRouter from "./routers/tweet_router.js";
 
 const app = express();
 const port = 4000;
@@ -36,6 +37,7 @@ app.use(
 
 // Routes
 app.use("/users", userRouter);
+app.use("/tweets", TweetsRouter);
 
 // MongoDB Connection
 mongoose

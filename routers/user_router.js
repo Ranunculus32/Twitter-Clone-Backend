@@ -28,6 +28,6 @@ router.get("/:id/followers", getAllFollowers);
 router.get("/:id/following", getAllFollowing);
 
 // route to update a user
-router.put("/users/:id", updateUser);
+router.put("/:id", updateUser);
 
 export default router;
