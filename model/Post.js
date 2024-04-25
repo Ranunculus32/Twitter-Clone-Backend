@@ -2,14 +2,19 @@ import mongoose,{Schema}  from "mongoose";
 
 // Define the schema for a post
 const postSchema = new mongoose.Schema({
-  author: {
+  UserId: {
     type: mongoose.Types.ObjectId,
-    ref: 'User', // Reference to the User model for the author
+    ref: 'User', 
   },
- text: {
+ content: {
     type: String,
     required: true,
     maxlength: 280 
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now
   },
 
 

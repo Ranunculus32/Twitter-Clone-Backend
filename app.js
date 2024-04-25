@@ -5,6 +5,8 @@ import connectMongoDBSession from "connect-mongodb-session";
 import dotenv from "dotenv";
 import cors from "cors";
 import Post from "./model/Post.js";
+import userRouter from "./routers/user_router.js";  
+import bodyParser from "body-parser";
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use(cors());
 
 // Middleware
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
+app.use(bodyParser.json()); // Parse application/json
 
 // Session and Flash Middleware
 const store = new MongoDBStore({
