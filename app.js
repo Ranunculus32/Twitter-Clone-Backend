@@ -1,21 +1,25 @@
 import mongoose from "mongoose";
 import express from "express";
 import session from "express-session";
-import connectMongoDBSession from "connect-mongodb-session";
+import MongoDBStore from "connect-mongodb-session";
+import userRouter from "./routers/user_router.js";
+import tweetRouter from "./routers/tweet_router.js";
 import dotenv from "dotenv";
-import cors from "cors";
-import Post from "./model/Post.js";
-import userRouter from "./routers/user_router.js";  
 import bodyParser from "body-parser";
+import cors from "cors";
+
 
 dotenv.config();
 
-const MongoDBStore = connectMongoDBSession(session);
 
-const port = 8000;
+const port = process.env.PORT || 3000;
 
 const app = express();
 app.use(cors());
+
+
+// MongoDBStore with session
+const MongoDBStoreSession = MongoDBStore(session);
 
 // Middleware
 app.use(express.json());
@@ -23,38 +27,35 @@ app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-
 app.use(bodyParser.json()); // Parse application/json
 
 // Session and Flash Middleware
-const store = new MongoDBStore({
+const store = new MongoDBStoreSession({
   uri: process.env.MONGODB_URL,
   collection: "sessions",
 });
+
+
 
 app.use(
   session({
     secret: process.env.secretKey,
     resave: false,
     saveUninitialized: true,
-    store: store,
+    store,
   })
 );
 
-// Route to create a new post
-app.post('/posts', (req, res) => {
-  const newPost = new Post({
-      author: req.body.author,
-      text: req.body.text
-  });
 
-  newPost.save().then(post => res.json(post));
+// Routes
+
+// Home Route
+app.get("/", (req, res) =>{
+  res.send("Let's Tweet!");
 });
 
-// Get Posts Route
-app.get('/posts', (req, res) => {
-  Post.find()
-      .sort({ date: -1 })
-      .then(posts => res.json(posts));
-});
+// User Routes
+app.use("/users", userRouter);
 
-
+// Tweet Routes
+app.use("/tweets", tweetRouter);
 
 
 // MongoDB Connection
@@ -67,3 +68,5 @@ mongoose
 app.listen(port, () =>
   console.log(`Backend server is running on port ${port}!`)
 );
+
+export default app;
