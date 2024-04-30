@@ -8,7 +8,7 @@ const tweetSchema = new mongoose.Schema({
     maxlength: 280 
   },
   userId: {
-    type: String,    // 
+    type: mongoose.Type.ObjectId,    // 
     ref: 'User', 
     required: true
   },
