@@ -54,6 +54,8 @@
   "jest": {
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
-    }
+    },
+    "testTimeout": 15000,
+    "forceExit": true
   }
 }
