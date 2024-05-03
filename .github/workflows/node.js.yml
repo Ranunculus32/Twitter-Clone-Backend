@@ -23,5 +23,8 @@ jobs:
       - name: install dependencies
         run: npm install
 
+      - name: Rebuild bcrypt module
+        run: npm rebuild bcrypt --build-from-source
+
       - name: test
         run: npm run test
