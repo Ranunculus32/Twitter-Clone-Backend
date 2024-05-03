@@ -39,15 +39,17 @@ app.use(
 app.use("/users", userRouter);
 app.use("/tweets", TweetsRouter);
 
-// MongoDB Connection
-mongoose
-  .connect(process.env.MONGODB_URL)
-  .then(() => console.log("DB Connection Successful!"))
-  .catch((err) => console.log(err));
+// Connect to MongoDB only in non-test environments
+if (process.env.NODE_ENV !== "test") {
+  mongoose
+    .connect(process.env.MONGODB_URL)
+    .then(() => console.log("DB Connection Successful!"))
+    .catch((err) => console.log(err));
 
-// Start the server
-app.listen(port, () =>
-  console.log(`Backend server is running on port ${port}!`)
-);
+  // Start the server only in non-test environments
+  app.listen(port, () =>
+    console.log(`Backend server is running on port ${port}!`)
+  );
+}
 
 export default app;

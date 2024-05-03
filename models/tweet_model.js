@@ -12,7 +12,7 @@ const tweetSchema = new mongoose.Schema({
     default: Date.now,
   },
   hashtag: {
-    type: [],
+    type: Array,
   },
 });
 

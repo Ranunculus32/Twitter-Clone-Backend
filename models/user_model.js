@@ -34,10 +34,10 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   followers: {
-    type: [],
+    type: Array,
   },
   following: {
-    type: [],
+    type: Array,
   },
   createdAt: {
     type: Date,
