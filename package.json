@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "jest --detectOpandles",
+    "test": "jest --detectOpenHandles",
     "start:test": "cross-env NODE_ENV=test vite",
     "cypress:open": "cypress open"
   },
