@@ -5,6 +5,7 @@ import MongoDBStore from "connect-mongodb-session";
 import userRouter from "./routers/user_router.js";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 const app = express();
 const port = 4000;
@@ -14,8 +15,19 @@ dotenv.config();
 const MongoDBStoreSession = MongoDBStore(session);
 
 // Middleware
+
 app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // Parse application/json
+
+// Enable CORS for specific origins and methods
+app.use(
+  cors({
+    origin: "'http://localhost:5173",
+    methods: ["GET", "POST"], //
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 // Session and Flash Middleware
 const store = new MongoDBStoreSession({
