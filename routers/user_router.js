@@ -3,7 +3,7 @@ import {
   isAuthenticatedUser,
   isRegisterUser,
   logoutUser,
-} from "../controllers/user_middleware.js";
+} from "../middleware/user_middleware.js";
 
 const router = express.Router();
 

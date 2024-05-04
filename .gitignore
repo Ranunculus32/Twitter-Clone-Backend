@@ -12,4 +12,7 @@ node_modules/
 .vscode/
 .idea/
 *.iml
-frontend/
+
+
+# Build files
+

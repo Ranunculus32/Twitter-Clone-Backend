@@ -46,15 +46,7 @@ app.use(
 
 // Routes
 
-// Home Route
-app.get("/", (req, res) =>{
-  res.send("Let's Tweet!");
-});
-
-// User Routes
 app.use("/users", userRouter);
-
-// Tweet Routes
 app.use("/tweets", tweetRouter);
 
 
