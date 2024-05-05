@@ -1,6 +1,7 @@
 # Dependency directories
 node_modules/
 
+
 # Environment variables file
 .env
 
@@ -11,3 +12,7 @@ node_modules/
 .vscode/
 .idea/
 *.iml
+
+
+# Build files
+
