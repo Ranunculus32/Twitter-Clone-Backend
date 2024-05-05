@@ -3,11 +3,7 @@ import User from './user_model.js';
 
 
 const postSchema = new mongoose.Schema({
-  /*   userId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-  }, */
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

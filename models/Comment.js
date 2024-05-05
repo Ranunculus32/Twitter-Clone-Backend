@@ -13,17 +13,12 @@ const commentSchema = new Schema({
         ref: 'User',
         required: true,
     },
-    author: {
-        type: String,
-        required: true,
-    },
+
     content: {
         type: String,
         required: true,
     },
-    htmlContent: {
-        type: String,
-    },
+
     /*    likes: {
            type: Number,
            default: 0,

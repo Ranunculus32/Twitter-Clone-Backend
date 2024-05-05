@@ -68,7 +68,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
-    console.log("Request body:", req.body);
+    /*  console.log("Request body:", req.body); */
 
     const user = await User.findOne({ username });
 
@@ -82,7 +82,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
       });
     }
 
-    console.log("User found in the database:", user);
+    /*  console.log("User found in the database:", user); */
 
     const isPasswordMatched = await bcrypt.compare(password, user.password);
 

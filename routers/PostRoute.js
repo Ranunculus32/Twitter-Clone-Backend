@@ -1,37 +1,19 @@
 import express from "express";
 import Post from "../models/Post.js";
 import User from "../models/user_model.js";
-
+import Comment from "../models/Comment.js";
 
 const router = express.Router();
 
 // Route to create a new post
-/* router.post('/posts', (req, res) => {
-    const newPost = new Post({
-        author: req.body.author,
-        content: req.body.content
-    });
-
-    newPost.save().then(post => res.json(post));
-}); */
-
-router.post('/posts', async (req, res) => {
+router.post('/create/:userId', async (req, res) => {
     try {
 
-        const user = await User.findOne({ username: req.body.author });
-        console.log('Request Body:', req.body);
-
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
+        const { userId } = req.params;
         const newPost = new Post({
-            userId: user._id, // Use the user's _id
-            content: req.body.content
+            content: req.body.content,
+            userId
         });
-
-
         const savedPost = await newPost.save();
         res.status(201).json(savedPost);
     } catch (error) {
@@ -41,36 +23,102 @@ router.post('/posts', async (req, res) => {
 });
 
 
-// Route to get all posts
-
-/* router.get("/posts", async (req, res) => {
-
+router.get("/:id", async (req, res) => {
     try {
-
-        const posts = await Post.find()
-            .populate('author', 'username')
-            .sort({ date: -1 })
-            .then(posts => res.json(posts));
+        const id = req.params.id;
+        const post = await Post.findById(id).populate('userId');
 
 
+        if (!post) {
+            res.status(404).json({ message: 'Post not found' });
+            return;
+        }
+
+        const comments = await Comment.find({ postId: post._id })
+            .sort({ createdAt: -1 })
+            .populate('userId')
+            .exec();
+
+        const responseData = {
+            post: post,
+            comments: comments
+        };
+
+        res.status(200).json(responseData);
 
     } catch (error) {
-        console.error('Error searching users:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).send(error.message);
     }
-}); */
-router.get("/posts", async (req, res) => {
+});
+
+
+
+
+
+// GET all posts 
+router.get('/', async (req, res) => {
     try {
         const posts = await Post.find()
-            /* .populate('username') */  // Populate the author field with only the username
-            .sort({ createdAt: -1 }); // Sort by createdAt in descending order
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'userId',
+                    select: 'username fullName' // Populate userId with username and fullName
+                }
+            })
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'userId', // Populate comments with username
+                    select: 'username'
+                }
+            })
+            .populate('userId', 'username fullName');
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+
+// DOES NOT WORK BUT KEEP IT AS A REFERENCE
+
+/* router.get("/", async (req, res) => {
+    try {
+        const posts = await Post.find().populate('userId').exec();
+
+        // Check if there are posts
+        if (!posts || posts.length === 0) {
+            res.status(404).json({ message: 'No posts found' });
+            return;
+        }
+
+        // Fetch comments for each post
+        const postsWithComments = await Promise.all(posts.map(async (post) => {
+            const comments = await Comment.find({ postId: post._id }).populate('userId').exec();
+            return { post: post, comments: comments };
+        }));
+
+        res.status(200).json(postsWithComments);
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}); */
+
+/* router.get("/", async (req, res) => {
+    try {
+        const posts = await Post.find().sort({ createdAt: -1 });
         res.json(posts);
     } catch (error) {
         console.error('Error fetching posts:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
+ */
 
 
 export default router;

@@ -11,7 +11,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 
 const app = express();
-const port = 4000;
+const port = 8000;
 dotenv.config();
 
 // MongoDBStore with session
@@ -42,9 +42,8 @@ app.use(
 
 // Routes
 app.use("/users", userRouter);
-/* app.use('/', userRoutes); */
 app.use('/api', searchRoute);
-app.use('/feed', postsRoute);
+app.use('/post', postsRoute);
 app.use('/comment', commentsRoute);
 
 
