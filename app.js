@@ -3,31 +3,24 @@ import express from "express";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
 import userRouter from "./routers/user_router.js";
+import searchRoute from "./routers/SearchRoute.js";
+import postsRoute from "./routers/PostRoute.js";
+import commentsRoute from "./routers/CommentRoute.js";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
 
 const app = express();
-const port = 4000;
+const port = 8000;
 dotenv.config();
 
 // MongoDBStore with session
 const MongoDBStoreSession = MongoDBStore(session);
 
 // Middleware
-
 app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // Parse application/json
-
-// Enable CORS for specific origins and methods
-app.use(
-  cors({
-    origin: "'http://localhost:5173",
-    methods: ["GET", "POST"], //
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // Session and Flash Middleware
 const store = new MongoDBStoreSession({
@@ -46,12 +39,19 @@ app.use(
 
 // Routes
 app.use("/users", userRouter);
+app.use('/api', searchRoute);
+app.use('/post', postsRoute);
+app.use('/comment', commentsRoute);
+
+
 
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => console.log("DB Connection Successful!"))
   .catch((err) => console.log(err));
+
+
 
 // Start the server
 app.listen(port, () =>
