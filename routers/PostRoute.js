@@ -84,41 +84,6 @@ router.get('/', async (req, res) => {
 
 
 
-// DOES NOT WORK BUT KEEP IT AS A REFERENCE
-
-/* router.get("/", async (req, res) => {
-    try {
-        const posts = await Post.find().populate('userId').exec();
-
-        // Check if there are posts
-        if (!posts || posts.length === 0) {
-            res.status(404).json({ message: 'No posts found' });
-            return;
-        }
-
-        // Fetch comments for each post
-        const postsWithComments = await Promise.all(posts.map(async (post) => {
-            const comments = await Comment.find({ postId: post._id }).populate('userId').exec();
-            return { post: post, comments: comments };
-        }));
-
-        res.status(200).json(postsWithComments);
-
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-}); */
-
-/* router.get("/", async (req, res) => {
-    try {
-        const posts = await Post.find().sort({ createdAt: -1 });
-        res.json(posts);
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
- */
 
 
 export default router;
