@@ -18,11 +18,8 @@ dotenv.config();
 const MongoDBStoreSession = MongoDBStore(session);
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
-/* app.use(bodyParser.urlencoded({ extended: false })); */ // Parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // Parse application/json
-app.use(cors());
-
 app.use(cors());
 
 // Session and Flash Middleware
