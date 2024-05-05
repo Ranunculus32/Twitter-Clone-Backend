@@ -28,6 +28,7 @@ app.use(
     credentials: true,
   })
 );
+app.options("*", cors());  
 
 // Session and Flash Middleware
 const store = new MongoDBStoreSession({
@@ -45,7 +46,8 @@ app.use(
 );
 
 // Routes
-app.use("/users", userRouter);
+
+app.use("/", userRouter);
 
 // MongoDB Connection
 mongoose
