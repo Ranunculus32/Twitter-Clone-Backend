@@ -33,7 +33,7 @@ export const isRegisterUser = async (req, res, next) => {
     }
 
     console.log("Attempting to register user:", username);
-    const hashedPassword = hashPass;
+    const hashedPassword = await hashPass(password);
 
     console.log("Request Body:", req.body);
 
@@ -201,7 +201,7 @@ export const postAFollower = async (req, res) => {
     foundedUser.followers.push(newFollower);
     await foundedUser.save();
 
-    res.status(201).json(foundedUser);
+    res.status(201).json(foundedUser.followers);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -224,7 +224,7 @@ export const postAFollowing = async (req, res) => {
     foundedUser.following.push(newFollowing);
     await foundedUser.save();
 
-    res.status(201).json(foundedUser);
+    res.status(201).json(foundedUser.following);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

@@ -1,7 +1,6 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import supertest from "supertest";
-
 import app from "../app.js";
 import User from "../models/user_model.js";
 const api = supertest(app);
@@ -54,28 +53,6 @@ test("Login user with wrong credentials", async () => {
   expect(res.body.success).toBe(false);
   expect(res.body.message).toBe("Incorrect username or password");
 });
-/* 
-test("Get all users", async () => {
-  // Create some dummy users
-  await api.post("/users/register").send([
-    {
-      username: "user1",
-      email: "user1@example.com",
-      fullName: "User One",
-      password: "password",
-    },
-    {
-      username: "user2",
-      email: "user2@example.com",
-      fullName: "User Two",
-      password: "password",
-    },
-  ]);
-
-  const res = await api.get("/users/");
-  expect(res.statusCode).toBe(200);
-  expect(res.body.length).toBe(2); // Assuming two dummy users were created
-}); */
 
 test("save a tweet", async () => {
   const res = await api.post("/tweets/").send({
