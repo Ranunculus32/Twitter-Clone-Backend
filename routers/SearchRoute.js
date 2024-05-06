@@ -22,14 +22,11 @@ router.get('/search', async (req, res) => {
         const users = await User.find(); // Use .lean() to ensure plain JavaScript objects are returned
         /*  const posts = await Post.find(); */
 
-
         const filteredUsers = users.filter(user => user.fullName && user.fullName.toLowerCase().includes(query));
         /*  const filteredPosts = posts.filter(post => post.content && post.content.toLowerCase().includes(query)); */
 
-        // Log the search results to the console
         console.log(filteredUsers);
         /* console.log(filteredPosts); */
-
 
         res.status(200).json(filteredUsers);
     } catch (error) {

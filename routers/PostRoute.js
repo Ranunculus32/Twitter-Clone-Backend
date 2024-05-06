@@ -53,8 +53,6 @@ router.get("/:id", async (req, res) => {
 
 
 
-
-
 // GET all posts 
 router.get('/', async (req, res) => {
     try {

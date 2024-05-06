@@ -28,7 +28,7 @@ const commentSchema = new Schema({
             type: String,
             required: true,
         },
-        // You can add more fields here as needed
+
     }],
 
     /*    likes: {
