@@ -6,6 +6,7 @@ import userRouter from "./routers/user_router.js";
 import searchRoute from "./routers/SearchRoute.js";
 import postsRoute from "./routers/PostRoute.js";
 import commentsRoute from "./routers/CommentRoute.js";
+import tweetRouter from "./routers/tweet_router.js";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -42,7 +43,7 @@ app.use("/users", userRouter);
 app.use('/api', searchRoute);
 app.use('/post', postsRoute);
 app.use('/comment', commentsRoute);
-
+app.use("/tweets", tweetRouter);
 
 
 // MongoDB Connection

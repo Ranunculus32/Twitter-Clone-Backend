@@ -24,7 +24,6 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "mongodb-memory-server": "^9.1.8",
-    "mongoose": "^8.2.4",
     "node.js": "^0.0.1-security",
     "mongoose": "^8.3.2",
     "mongoose-autopopulate": "^1.1.0",
