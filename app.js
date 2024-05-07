@@ -11,6 +11,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
 import profileRoute from "./routers/profileRoute.js";
+import trendRouter from "./routers/trendRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -45,6 +46,7 @@ app.use("/api", searchRoute);
 app.use("/post", postsRoute);
 app.use("/comment", commentsRoute);
 app.use("/tweets", tweetRouter);
+app.use("/tweets", trendRouter);
 
 // Connect to MongoDB only in non-test environments
 if (process.env.NODE_ENV !== "test") {
