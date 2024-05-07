@@ -1,59 +1,59 @@
-import mongoose from "mongoose";
 import express from "express";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
-import userRouter from "./routers/user_router.js";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
+import mongoose from "mongoose";
+import userRouter from "./routers/user_router.js";
+
+dotenv.config(); // Load environment variables
 
 const app = express();
 const port = 4000;
-dotenv.config();
 
 // MongoDBStore with session
 const MongoDBStoreSession = MongoDBStore(session);
 
-// Middleware
+// Middleware setup
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
-app.use(bodyParser.json()); // Parse application/json
-
-// Enable CORS for specific origins and methods
+// Enable CORS with correct configuration
 app.use(
   cors({
-    origin: "'http://localhost:5173",
-    methods: ["GET", "POST"], //
+    origin: "http://localhost:5173", // Ensure correct origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+    credentials: true, // Allow credentials
   })
 );
-app.options("*", cors());  
+app.options("*", cors()); // Handle preflight requests
 
-// Session and Flash Middleware
+// Session and Flash Middleware with correct secret
 const store = new MongoDBStoreSession({
-  uri: process.env.MONGODB_URL,
+  uri: process.env.MONGODB_URL, // Ensure correct MongoDB URI
   collection: "sessions",
 });
 
+// Ensure the secret key is provided for express-session
 app.use(
   session({
-    secret: process.env.secretKey,
+    secret: process.env.secretKey, // Use the environment variable
     resave: false,
     saveUninitialized: true,
-    store,
+    store, // Use MongoDBStoreSession for session persistence
   })
 );
 
-// Routes
-
+// Use userRouter for routing
 app.use("/", userRouter);
 
-// MongoDB Connection
+// MongoDB connection
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => console.log("DB Connection Successful!"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error("DB Connection Error:", err));
 
 // Start the server
 app.listen(port, () =>

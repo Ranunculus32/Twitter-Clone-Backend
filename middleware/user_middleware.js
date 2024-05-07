@@ -1,5 +1,6 @@
 import User from "../models/user_model.js";
 import { compare, hashPass } from "../utils/bcryptFunction.js";
+import bcrypt from "bcrypt";
 
 export const isRegisterUser = async (req, res, next) => {
   try {
@@ -33,7 +34,9 @@ export const isRegisterUser = async (req, res, next) => {
     }
 
     console.log("Attempting to register user:", username);
-    const hashedPassword = hashPass;
+
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10); // Salt rounds: 10
 
     console.log("Request Body:", req.body);
 
@@ -49,11 +52,15 @@ export const isRegisterUser = async (req, res, next) => {
       createdAt: new Date(),
     });
 
-    await newUser.save();
+    await newUser.save(); // Save the user to the database
+
     console.log("User registered successfully");
+
+    // Send success message with redirect information
     res.status(201).json({
       success: true,
       message: "Registration successful. Redirecting to login page.",
+      redirect: "/login", // Indicate where the client should redirect
     });
   } catch (error) {
     console.error("Error during user registration:", error);
@@ -84,10 +91,10 @@ export const isAuthenticatedUser = async (req, res, next) => {
 
     console.log("User found in the database:", user);
 
-    const isPasswordMatched = await compare(password, user.password);
+    // Compare the provided password with the hashed password stored in the database
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
 
     if (!isPasswordMatched) {
-      // Delay response to prevent brute-force attacks
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       console.error(
