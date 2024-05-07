@@ -38,7 +38,15 @@ To execute the test suite, use the following command:
 
 `npm test`
 
-## Note
+## Note1
+
+If you're still encountering errors associated with bcrypt, try the following steps to troubleshoot:
+
+`npm uninstall bcrypt`
+
+`npm install bcrypt`
+
+## Note2
 
 The frontend for this project is located in a separate repository
 
