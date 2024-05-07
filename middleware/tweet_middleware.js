@@ -111,6 +111,13 @@ export const editTweetById = async (req, res) => {
   }
 };
 
+// Function to get all tweets
+export const getAllTweets = async (req, res) => {
+  // Retrieve all users from the database send as JSON response
+  const tweets = await tweetModel.find();
+  res.status(200).json(tweets);
+};
+
 //get all the hashtag
 
 export const getAllHashTag = async (req, res) => {

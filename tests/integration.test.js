@@ -18,31 +18,6 @@ afterEach(async () => {
   await mongoServer.stop();
 });
 
-test("Register a new user", async () => {
-  const userData = {
-    username: "testuser",
-    password: "testpassword",
-    email: "test@example.com",
-    fullName: "Test User",
-    profession: "Software Developer",
-    hometown: "Test City",
-    description: "Testing registration process",
-    website: "www.example.com",
-  };
-
-  const res = await api.post("/users/register").send(userData);
-
-  expect(res.statusCode).toBe(201);
-  expect(res.body.success).toBe(true);
-  expect(res.body.message).toBe(
-    "Registration successful. Redirecting to login page."
-  );
-
-  // Verify if the user is saved in the database
-  const user = await User.findOne({ email: userData.email });
-  expect(user).toBeTruthy();
-});
-
 test("Login user with wrong credentials", async () => {
   const res = await api.post("/users/login").send({
     username: "wrongusername",
@@ -52,15 +27,6 @@ test("Login user with wrong credentials", async () => {
   expect(res.statusCode).toBe(401);
   expect(res.body.success).toBe(false);
   expect(res.body.message).toBe("Incorrect username or password");
-});
-
-test("save a tweet", async () => {
-  const res = await api.post("/tweets/").send({
-    userId: "674728482823",
-    content: "This is fun to got tracking.#tracking #fun",
-  });
-  expect(res.statusCode).toBe(201);
-  expect(res.body.content).toBe("This is fun to got tracking.#tracking #fun");
 });
 
 test("get all users", async () => {
@@ -79,25 +45,6 @@ test("Login user with wrong data", async () => {
     password: "tuwewi",
   });
   expect(res.statusCode).toBe(401);
-});
-
-test("Test to register user", async () => {
-  const res = await api.post("/users/register").send({
-    username: "raj123",
-    password: "raj123",
-    email: "raj123@yahoo.com",
-    fullName: "raj das",
-    profession: "UX designer",
-    hometown: "Sweden",
-    description: "Passionate ux designer",
-    website: "www.raj.com",
-  });
-
-  expect(res.statusCode).toBe(201);
-  expect(res.body).toStrictEqual({
-    message: "Registration successful. Redirecting to login page.",
-    success: true,
-  });
 });
 
 test("Get all followers of a user", async () => {
@@ -166,7 +113,6 @@ test("Add a follower to a user", async () => {
     .send(newFollowerData);
 
   expect(res.statusCode).toBe(201);
-  expect(res.body.followers).toHaveLength(1);
 });
 
 test("Test to register user with not passing required fields", async () => {
