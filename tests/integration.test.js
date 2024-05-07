@@ -19,7 +19,7 @@ afterEach(async () => {
 });
 
 test("Login user with wrong credentials", async () => {
-  const res = await api.post("/users/login").send({
+  const res = await api.post("/login").send({
     username: "wrongusername",
     password: "wrongpassword",
   });
@@ -40,7 +40,7 @@ test("get all tweets", async () => {
 });
 
 test("Login user with wrong data", async () => {
-  const res = await api.post("/users/login").send({
+  const res = await api.post("/login").send({
     email: "nimmy@gmail.com",
     password: "tuwewi",
   });
@@ -116,7 +116,7 @@ test("Add a follower to a user", async () => {
 });
 
 test("Test to register user with not passing required fields", async () => {
-  const res = await api.post("/users/register").send({
+  const res = await api.post("/register").send({
     username: "raj123",
     password: "raj123",
     email: "raj123@yahoo.com",
