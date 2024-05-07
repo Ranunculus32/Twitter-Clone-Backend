@@ -10,6 +10,7 @@ import tweetRouter from "./routers/tweet_router.js";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
+import profileRoute from "./routers/profileRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -38,7 +39,8 @@ app.use(
 );
 
 // Routes
-app.use("/users", userRouter);
+app.use("/", userRouter);
+app.use("/users", profileRoute);
 app.use("/api", searchRoute);
 app.use("/post", postsRoute);
 app.use("/comment", commentsRoute);
