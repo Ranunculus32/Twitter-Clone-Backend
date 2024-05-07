@@ -28,6 +28,34 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Route to Reply on a Comment
+
+router.post('/:commentId/reply', async (req, res) => {
+    try {
+        const { commentId } = req.params;
+        const { userId, content } = req.body;
+
+        if (!userId || !content) {
+            return res.status(400).json({ error: 'userId and content are required' });
+        }
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        comment.reply.push({ userId, content });
+        await comment.save();
+
+        res.status(201).json(comment);
+    } catch (error) {
+        console.error('Error adding reply:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 router.get('/:postId', async (req, res) => {
     try {
 
@@ -41,8 +69,5 @@ router.get('/:postId', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-
-
 
 export default router;

@@ -18,6 +18,18 @@ const commentSchema = new Schema({
         type: String,
         required: true,
     },
+    reply: [{
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        content: {
+            type: String,
+            required: true,
+        },
+
+    }],
 
     /*    likes: {
            type: Number,

@@ -53,8 +53,6 @@ router.get("/:id", async (req, res) => {
 
 
 
-
-
 // GET all posts 
 router.get('/', async (req, res) => {
     try {
@@ -80,10 +78,6 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-
-
-
 
 
 export default router;
