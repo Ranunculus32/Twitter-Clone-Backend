@@ -23,12 +23,9 @@ router.post("/logout", logoutUser);
 // route to get all users
 router.get("/", getAllUsers);
 
-// route to get a user
 router.get("/:id", getOneUser);
 
-// route to get followers
 router.get("/:id/followers", getAllFollowers);
-
 // route to get following
 router.get("/:id/following", getAllFollowing);
 

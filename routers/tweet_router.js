@@ -1,18 +1,19 @@
 import express from "express";
 import {
+  createTweet,
+  getTweetById,
+  deleteTweetById,
+  editTweetById,
   getAllHashTag,
-  getAllTweet,
   getMostOccurringHashtags,
-  postATweet,
 } from "../middleware/tweet_middleware.js";
 
 const router = express.Router();
 
-// Route to get all tweets
-router.get("/", getAllTweet);
-
-// Route to post a new tweet
-router.post("/", postATweet);
+router.post("/create", createTweet);
+router.get("/:id", getTweetById);
+router.delete("/:id", deleteTweetById);
+router.put("/:id", editTweetById);
 
 // Route to get all hashtags
 router.get("/hashtags", getAllHashTag);

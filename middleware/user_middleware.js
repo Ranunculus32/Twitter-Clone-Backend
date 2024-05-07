@@ -1,5 +1,5 @@
+import bcrypt from "bcrypt";
 import User from "../models/user_model.js";
-import { compare, hashPass } from "../utils/bcryptFunction.js";
 
 export const isRegisterUser = async (req, res, next) => {
   try {
@@ -84,7 +84,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
 
     console.log("User found in the database:", user);
 
-    const isPasswordMatched = await compare(password, user.password);
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
 
     if (!isPasswordMatched) {
       // Delay response to prevent brute-force attacks
@@ -135,10 +135,17 @@ export const getAllUsers = async (req, res) => {
 // Function to get a single user by id
 export const getOneUser = async (req, res) => {
   const { id } = req.params;
-
-  // Find a user with the given id from db and pass as JSON response
-  const foundedUser = await User.findOne({ _id: id });
-  res.status(200).json(foundedUser);
+  try {
+    // Find a user with the given id from db and pass as JSON response
+    const foundedUser = await User.findOne({ _id: id });
+    if (!foundedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(foundedUser);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 // Function to get followers of a user
@@ -147,7 +154,7 @@ export const getAllFollowers = async (req, res) => {
 
   try {
     // Find the user by id
-    const foundedUser = await User.findById(id);
+    const foundedUser = await User.findOne({ _id: id });
 
     if (!foundedUser) {
       return res.status(404).json({ error: "User not found" });
@@ -169,7 +176,7 @@ export const getAllFollowing = async (req, res) => {
 
   try {
     // Find the user by id
-    const foundedUser = await User.findById(id);
+    const foundedUser = await User.findOne({ _id: id });
 
     if (!foundedUser) {
       return res.status(404).json({ error: "User not found" });

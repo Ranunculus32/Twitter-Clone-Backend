@@ -1,21 +1,40 @@
 import mongoose from "mongoose";
 
+// Define the schema for tweets
 const tweetSchema = new mongoose.Schema({
-  userId: {
+
+  username: {
     type: String,
+  },
+  userId: {
+    type:String,
   },
   content: {
     type: String,
+    required: true,
+    maxlength: 280
   },
+  likes: {
+    type:Number,
+    default:0
+  },
+
+  comments: {
+    type:Number,
+    default:0
+  },
+
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
-  hashtag: {
-    type: Array,
-  },
+
+  hashtags: [{
+    type: String
+  }]
 });
 
-const Tweets = mongoose.model("Tweets", tweetSchema);
 
-export default Tweets;
+const Tweet = mongoose.model('Tweet', tweetSchema);
+
+export default Tweet;
