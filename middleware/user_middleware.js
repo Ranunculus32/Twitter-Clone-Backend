@@ -1,8 +1,10 @@
 import User from "../models/user_model.js";
 import { compare, hashPass } from "../utils/bcryptFunction.js";
-import bcrypt from "bcrypt";
+import { hashSync, compareSync } from "bcrypt";
 
-export const isRegisterUser = async (req, res, next) => {
+
+// Registration endpoint
+export const isRegisterUser = async (req, res) => {
   try {
     const {
       username,
@@ -15,34 +17,39 @@ export const isRegisterUser = async (req, res, next) => {
       website,
     } = req.body;
 
-    // Validate required fields
-    if (!email || !fullName || !password || !description || !website) {
+    // Check for required fields
+    if (
+      !username ||
+      !password ||
+      !email ||
+      !fullName ||
+      !profession ||
+      !hometown ||
+      !description
+    ) {
       return res.status(400).json({
         success: false,
-        message: "All required fields must be provided.",
+        message: "Fill the required areas.",
       });
     }
 
-    // Check if email is already registered
-    const existingUser = await User.findOne({ email });
+    // Check if the email or username is already registered
+    const existingUser = await User.findOne({ username });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "Email is already registered.",
+        message: 'Username is already registered.',
       });
     }
 
-    console.log("Attempting to register user:", username);
+    // Hash the password with hashSync
+    const hashedPassword = hashSync(password, 10); // 10 salt rounds
 
-    // Hash the password before storing it
-    const hashedPassword = await bcrypt.hash(password, 10); // Salt rounds: 10
-
-    console.log("Request Body:", req.body);
-
+    // Create a new user object with the hashed password
     const newUser = new User({
       username,
-      password: hashedPassword,
+      password: hashedPassword, // Store the hashed password
       email,
       fullName,
       profession,
@@ -52,71 +59,58 @@ export const isRegisterUser = async (req, res, next) => {
       createdAt: new Date(),
     });
 
-    await newUser.save(); // Save the user to the database
+    await newUser.save(); // Save the new user to MongoDB
 
-    console.log("User registered successfully");
-
-    // Send success message with redirect information
     res.status(201).json({
       success: true,
-      message: "Registration successful. Redirecting to login page.",
-      redirect: "/login", // Indicate where the client should redirect
+      message: 'Registration successful.',
+      redirect: '/login', // Redirect to login page after registration
     });
   } catch (error) {
-    console.error("Error during user registration:", error);
+    console.error('Error during registration:', error);
     res.status(500).json({
       success: false,
-      message: "Server error during user registration.",
+      message: 'Server error during registration.',
     });
   }
 };
 
-export const isAuthenticatedUser = async (req, res, next) => {
+
+export const isAuthenticatedUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    console.log("Request body:", req.body);
-
+    // Find the user by username in MongoDB
     const user = await User.findOne({ username });
 
     if (!user) {
-      // Delay response to prevent username enumeration attacks
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       return res.status(401).json({
         success: false,
-        message: "Incorrect username or password",
+        message: "Invalid username or password.",
       });
     }
 
-    console.log("User found in the database:", user);
-
-    // Compare the provided password with the hashed password stored in the database
-    const isPasswordMatched = await bcrypt.compare(password, user.password);
+    // Synchronously compare the plaintext password with the hashed password
+    const isPasswordMatched = compareSync(password, user.password);
 
     if (!isPasswordMatched) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      console.error(
-        "Incorrect password. Hashed:",
-        user.password,
-        "Input:",
-        password
-      );
-
       return res.status(401).json({
         success: false,
-        message: "Incorrect username or password",
+        message: "Invalid username or password.",
       });
     }
 
-    req.session.user = { username, userId: user._id };
-    res.status(200).json({ success: true, message: "Login successful" });
+    req.session.user = { username, userId: user._id }; // Set session data
+    res.status(200).json({
+      success: true,
+      message: "Login successful.",
+      redirect: "/users/:id", // Redirect to a protected page on success
+    });
   } catch (error) {
-    console.error("Error during user authentication:", error);
+    console.error("Error during login:", error);
     res.status(500).json({
       success: false,
-      message: "Server error upon login",
+      message: "Server error during login.",
     });
   }
 };
