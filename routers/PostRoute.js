@@ -54,6 +54,7 @@ router.get("/:id", async (req, res) => {
 
 
 // GET all posts 
+
 router.get('/', async (req, res) => {
     try {
         const posts = await Post.find()
@@ -64,13 +65,6 @@ router.get('/', async (req, res) => {
                     select: 'username fullName' // Populate userId with username and fullName
                 }
             })
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'userId', // Populate comments with username
-                    select: 'username'
-                }
-            })
             .populate('userId', 'username fullName');
         res.status(200).json(posts);
     } catch (error) {
@@ -78,6 +72,5 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 
 export default router;
