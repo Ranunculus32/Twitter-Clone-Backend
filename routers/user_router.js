@@ -3,18 +3,10 @@ import {
   isAuthenticatedUser,
   isRegisterUser,
   logoutUser,
-  getAllUsers,
-  getOneUser,
-  getAllFollowers,
-  getAllFollowing,
-  updateUser,
-  postAFollower,
-  postAFollowing,
-  deleteAFollowing,
-  deleteAfollower,
 } from "../middleware/user_middleware.js";
 
 const router = express.Router();
+
 
 // POST request for user registration
 router.post("/register", (req, res, next) => {
@@ -75,5 +67,7 @@ router.delete("/:id/following/:followingId", deleteAFollowing);
 
 // route to update a user
 router.put("/:id", updateUser);
+
+
 
 export default router;
