@@ -1,7 +1,5 @@
 import User from "../models/user_model.js";
-import { compare, hashPass } from "../utils/bcryptFunction.js";
 import { hashSync, compareSync } from "bcrypt";
-
 
 // Registration endpoint
 export const isRegisterUser = async (req, res) => {
@@ -25,11 +23,12 @@ export const isRegisterUser = async (req, res) => {
       !fullName ||
       !profession ||
       !hometown ||
-      !description
+      !description ||
+      !website
     ) {
       return res.status(400).json({
         success: false,
-        message: "Fill the required areas.",
+        message: "Please fill in all required areas.",
       });
     }
 
@@ -39,17 +38,15 @@ export const isRegisterUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'Username is already registered.',
+        message: "Username is already registered.",
       });
     }
 
-    // Hash the password with hashSync
     const hashedPassword = hashSync(password, 10); // 10 salt rounds
 
-    // Create a new user object with the hashed password
     const newUser = new User({
       username,
-      password: hashedPassword, // Store the hashed password
+      password: hashedPassword,
       email,
       fullName,
       profession,
@@ -59,28 +56,27 @@ export const isRegisterUser = async (req, res) => {
       createdAt: new Date(),
     });
 
-    await newUser.save(); // Save the new user to MongoDB
+    await newUser.save();
 
     res.status(201).json({
       success: true,
-      message: 'Registration successful.',
-      redirect: '/login', // Redirect to login page after registration
+      message: "Registration successful.",
+      redirect: "/login",
     });
   } catch (error) {
-    console.error('Error during registration:', error);
+    console.error("Error during registration:", error);
     res.status(500).json({
       success: false,
-      message: 'Server error during registration.',
+      message: "Server error during registration.",
     });
   }
 };
 
-
+// Authentication endpoint
 export const isAuthenticatedUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Find the user by username in MongoDB
     const user = await User.findOne({ username });
 
     if (!user) {
@@ -90,7 +86,6 @@ export const isAuthenticatedUser = async (req, res) => {
       });
     }
 
-    // Synchronously compare the plaintext password with the hashed password
     const isPasswordMatched = compareSync(password, user.password);
 
     if (!isPasswordMatched) {
@@ -100,11 +95,11 @@ export const isAuthenticatedUser = async (req, res) => {
       });
     }
 
-    req.session.user = { username, userId: user._id }; // Set session data
+    req.session.user = { username, userId: user._id };
     res.status(200).json({
       success: true,
       message: "Login successful.",
-      redirect: "/users/:id", // Redirect to a protected page on success
+      redirect: `/users/${user._id}`,
     });
   } catch (error) {
     console.error("Error during login:", error);
@@ -115,183 +110,14 @@ export const isAuthenticatedUser = async (req, res) => {
   }
 };
 
-export const logoutUser = (req, res, next) => {
+// Logout endpoint
+export const logoutUser = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error("Error destroying session:", err);
-      res.status(500).json({ success: false, message: "Error logging out" });
+      res.status(500).json({ success: false, message: "Error logging out." });
     } else {
-      res.status(200).json({ success: true, message: "Logout successful" });
+      res.status(200).json({ success: true, message: "Logout successful." });
     }
   });
-};
-
-// Function to get all users
-export const getAllUsers = async (req, res) => {
-  // Retrieve all users from the database send as JSON response
-  const users = await User.find();
-  res.status(200).json(users);
-};
-
-// Function to get a single user by id
-export const getOneUser = async (req, res) => {
-  const { id } = req.params;
-
-  // Find a user with the given id from db and pass as JSON response
-  const foundedUser = await User.findOne({ _id: id });
-  res.status(200).json(foundedUser);
-};
-
-// Function to get followers of a user
-export const getAllFollowers = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    // Find the user by id
-    const foundedUser = await User.findById(id);
-
-    if (!foundedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Get all followers of the founded user
-    const followers = foundedUser.followers;
-
-    res.json(followers);
-  } catch (error) {
-    console.error("Error fetching followers:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-// Function to get all the following of a user
-export const getAllFollowing = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    // Find the user by id
-    const foundedUser = await User.findById(id);
-
-    if (!foundedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Get all users that the founded user is following
-    const following = foundedUser.following;
-
-    res.json(following);
-  } catch (error) {
-    console.error("Error fetching following:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-// Function to add a follower to a user's followers list
-export const postAFollower = async (req, res) => {
-  const { id } = req.params;
-  const newFollower = req.body;
-
-  try {
-    // Find the user who is being followed
-    const foundedUser = await User.findOne({ _id: id });
-    if (!foundedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Add the follower to the followers array
-    foundedUser.followers.push(newFollower);
-    await foundedUser.save();
-
-    res.status(201).json(foundedUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// Function to add a user to the current user's following list
-export const postAFollowing = async (req, res) => {
-  const { id } = req.params;
-  const newFollowing = req.body;
-
-  try {
-    // Find the user in db
-    const foundedUser = await User.findOne({ _id: id });
-    if (!foundedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Add the following to the user following array
-    foundedUser.following.push(newFollowing);
-    await foundedUser.save();
-
-    res.status(201).json(foundedUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// Function to remove a following from the current user's following list
-export const deleteAFollowing = async (req, res) => {
-  const { id, followingId } = req.params;
-
-  try {
-    // Find the user by id
-    const foundedUser = await User.findOne({ _id: id });
-    if (!foundedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Remove the followingId from the user following array
-    const newFollowing = foundedUser.following.filter(
-      (following) => following.followingId !== followingId
-    );
-
-    // Update the user's following array with the newFollowing array
-    foundedUser.following = newFollowing;
-    await foundedUser.save();
-
-    res.status(200).json(foundedUser);
-  } catch (error) {
-    console.error("Error deleting following:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// Function to remove a follower from the current user's followers list
-export const deleteAfollower = async (req, res) => {
-  const { id, followerId } = req.params;
-
-  try {
-    // Find the user by id
-    const foundedUser = await User.findOne({ _id: id });
-
-    if (!foundedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Remove the followerId from the user follower array
-    const newFollower = foundedUser.followers.filter(
-      (follower) => follower.followerId !== followerId
-    );
-
-    // Update the user's followers array with the newFollower array
-    foundedUser.followers = newFollower;
-    await foundedUser.save();
-
-    res.status(200).json(foundedUser);
-  } catch (error) {
-    console.error("Error deleting following:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// Function to update a user's information
-export const updateUser = async (req, resp) => {
-  const { id } = req.params;
-  await User.updateMany({ _id: id }, req.body);
-  // send updated user info as response
-  const updatedUser = await User.findById(id);
-  resp.status(200).json(updatedUser);
 };
