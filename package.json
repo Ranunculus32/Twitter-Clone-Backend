@@ -1,14 +1,13 @@
 {
+  "type": "module",
   "name": "twitter-clone-backend",
   "version": "1.0.0",
   "description": "Node.js, express and mongodb",
   "main": "app.js",
-  "type": "module",
   "scripts": {
     "start": "nodemon app.js",
     "test": "jest --detectOpenHandles",
-    "start:test": "cross-env NODE_ENV=test vite",
-    "cypress:open": "cypress open"
+    "start:test": "cross-env NODE_ENV=test vite"
   },
   "keywords": [],
   "author": "",
@@ -18,10 +17,11 @@
     "body-parser": "^1.20.2",
     "connect-mongodb-session": "^5.0.0",
     "cors": "^2.8.5",
+    "cypress": "^13.8.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "mongodb-memory-server": "^9.1.8",
+    "mongodb-memory-server": "^9.2.0",
     "mongoose": "^8.2.4",
     "nodemon": "^3.1.0",
     "session": "^0.1.0",
@@ -38,7 +38,6 @@
     "@vitejs/plugin-react": "^4.0.3",
     "babel-jest": "^29.7.0",
     "cross-env": "^7.0.3",
-    "cypress": "^13.8.1",
     "eslint": "^8.45.0",
     "eslint-plugin-jest": "^27.2.3",
     "eslint-plugin-react": "^7.32.2",
