@@ -3,17 +3,21 @@ import {
   getAllHashTag,
   getMostOccurringHashtags,
   getAllTweets,
+  getOwnTweets,
 } from "../middleware/trend_middleware.js";
 
-const trendRouter = express.Router();
+const router = express.Router();
 
 // Route to get all hashtags
-trendRouter.get("/", getAllTweets);
+router.get("/", getAllTweets);
+
+//route to get all tweets of a user
+router.get("/:userId", getOwnTweets);
 
 // Route to get all hashtags
-trendRouter.get("/hashtags", getAllHashTag);
+router.get("/hashtags", getAllHashTag);
 
 // Route to get the most occurring hashtags
-trendRouter.get("/hashtags/most", getMostOccurringHashtags);
+router.get("/hashtags/most", getMostOccurringHashtags);
 
-export default trendRouter;
+export default router;
