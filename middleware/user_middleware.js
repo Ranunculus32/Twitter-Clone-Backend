@@ -68,7 +68,6 @@ export const isRegisterUser = async (req, res, next) => {
 export const isAuthenticatedUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-
     console.log("Request body:", req.body);
 
     const user = await User.findOne({ username });
@@ -77,13 +76,14 @@ export const isAuthenticatedUser = async (req, res, next) => {
       // Delay response to prevent username enumeration attacks
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
+      console.log("User not found in the database."); // Add this line
       return res.status(401).json({
         success: false,
         message: "Incorrect username or password",
       });
     }
 
-    console.log("User found in the database:", user);
+    console.log("User found in the database:", user); // Add this line
 
     const isPasswordMatched = await bcrypt.compare(password, user.password);
 
@@ -105,7 +105,9 @@ export const isAuthenticatedUser = async (req, res, next) => {
     }
 
     req.session.user = { username, userId: user._id };
-    res.status(200).json({ success: true, message: "Login successful" });
+    console.log("User ID:", user._id); // Add this line
+    res.status(200).json({ success: true, message: "Login successful", userId: user._id });
+
   } catch (error) {
     console.error("Error during user authentication:", error);
     res.status(500).json({
@@ -114,6 +116,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
     });
   }
 };
+
 
 export const logoutUser = (req, res, next) => {
   req.session.destroy((err) => {

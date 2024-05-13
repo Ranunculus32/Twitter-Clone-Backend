@@ -6,18 +6,21 @@ const router = express.Router();
 
 
 // Route to create a new comment on a post
-router.post('/', async (req, res) => {
+router.post('/:postId/:userId', async (req, res) => {
     try {
-        const { postId, userId, content } = req.body;
+        const { userId, postId } = req.params;
+        const { content } = req.body;
+
 
         if (!userId || !postId || !content) {
             return res.status(400).json({ error: 'userId, postId, and content are required' });
         }
 
         const newComment = new Comment({
+            content,
             postId,
             userId,
-            content
+
         });
 
         const savedComment = await newComment.save();
