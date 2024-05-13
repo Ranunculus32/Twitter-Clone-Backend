@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React,{ useState }  from "react";
+import axios from 'axios';
 import Avatar from '@mui/material/Avatar'
 import { styled } from '@mui/system';
 import SourceOutlinedIcon from '@mui/icons-material/SourceOutlined';
@@ -36,11 +37,29 @@ const GoodIconComponent = styled(FmdGoodOutlinedIcon)({
     });
 
 
-
-
-
-
-const Tweetbox = () => {
+    const Tweetbox = () => {
+        const [tweet, setTweet] = useState('');
+        const [status, setStatus] = useState('');
+      
+        const handleInputChange = (event) => {
+          setTweet(event.target.value);
+        };
+      
+        const handleTweetSubmit = async () => {
+          try {
+            await axios.post('http://localhost:4003/tweets/create',
+            { tweet },
+            {
+              withCredentials: true // Include cookies in the request
+            }
+            );
+            setStatus('Tweet posted successfully');
+            setTweet(''); // Clear input after successful posting
+          } catch (error) {
+            setStatus('Failed to post tweet');
+            console.error('Posting error:', error);
+          }
+        };
     return (
         <div className="tweetbox-container">
             <div className="tweetbox-title">
@@ -50,7 +69,12 @@ const Tweetbox = () => {
                 <Avatar src="Public/photo.jpg" 
                     sx={{ width: 60, height: 60 }} 
                 />
-                <input type="text" placeholder="What's happening?!"></input>
+                <input 
+                    type="text" 
+                    placeholder="What's happening?!"
+                    value={tweet}
+                    onChange={handleInputChange}
+                />
             </div>
         
             <div className="tweetbox-line">
@@ -66,13 +90,10 @@ const Tweetbox = () => {
                     <GoodIconComponent />
                 </div>
                 <div className="tweet-button">
-                    <button className="t-button">Tweet</button>
+                    <button className="t-button" onClick={handleTweetSubmit}>Tweet</button>
                 </div>
             </div>
-
-           
-            
-        
+            {status && <p>{status}</p>}
         </div>
     );
 } 
