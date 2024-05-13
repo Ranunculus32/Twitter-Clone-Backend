@@ -4,12 +4,12 @@ import {
   isRegisterUser,
   logoutUser,
 } from "../middleware/user_middleware.js";
-
 const router = express.Router();
 
 // POST request for user registration
 router.post("/register", (req, res, next) => {
   console.log("Accessed Register route");
+  isRegisterUser(req, res, next); // Calls middleware to handle registration
   isRegisterUser(req, res, next); // Calls middleware to handle registration
 });
 
@@ -17,11 +17,13 @@ router.post("/register", (req, res, next) => {
 router.post("/login", (req, res, next) => {
   console.log("Accessed Login route");
   isAuthenticatedUser(req, res, next); // Calls middleware to handle login
+  isAuthenticatedUser(req, res, next); // Calls middleware to handle login
 });
 
 // POST request for user logout
 router.post("/logout", (req, res, next) => {
   console.log("Accessed Logout route");
+  logoutUser(req, res, next); // Calls middleware to handle logout
   logoutUser(req, res, next); // Calls middleware to handle logout
 });
 

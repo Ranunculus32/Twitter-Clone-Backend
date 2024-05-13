@@ -1,6 +1,4 @@
-import bcrypt from "bcrypt";
 import User from "../models/user_model.js";
-import { compare, hashPass } from "../utils/bcryptFunction.js";
 import { hashSync, compareSync } from "bcrypt";
 
 
@@ -49,8 +47,6 @@ export const isRegisterUser = async (req, res) => {
     const hashedPassword = hashSync(password, 10); // 10 salt rounds
 
     console.log("Attempting to register user:", username);
-    const hashedPassword = await hashPass(password);
-
     console.log("Request Body:", req.body);
 
 
@@ -101,12 +97,6 @@ export const isAuthenticatedUser = async (req, res) => {
 
     // Synchronously compare the plaintext password with the hashed password
     const isPasswordMatched = compareSync(password, user.password);
-
-    console.log("User found in the database:", user);
-
-    const isPasswordMatched = await bcrypt.compare(password, user.password);
-
-
     if (!isPasswordMatched) {
       return res.status(401).json({
         success: false,
@@ -118,7 +108,7 @@ export const isAuthenticatedUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Login successful.",
-      redirect: "/users/:id", // Redirect to a protected page on success
+      redirect: "/homepage", // Redirect to homepage
     });
   } catch (error) {
     console.error("Error during login:", error);
