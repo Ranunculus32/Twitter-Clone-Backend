@@ -52,10 +52,10 @@ export const isRegisterUser = async (req, res) => {
     console.log("Attempting to register user:", username);
     console.log("Request Body:", req.body);
 
-
+    // Create a new user object with the hashed password
     const newUser = new User({
       username,
-      password: hashedPassword,
+      password: hashedPassword, // Store the hashed password
       email,
       fullName,
       profession,
@@ -111,11 +111,11 @@ export const isAuthenticatedUser = async (req, res) => {
       });
     }
 
-    req.session.user = { username, userId: user._id }; // Set session data
+    req.session.user = { username: user.username, userId: user._id }; // Set session data
     res.status(200).json({
       success: true,
       message: "Login successful.",
-      userId: user._id, // Corrected from user.userId to user._id
+      user: { username: user.username, userId: user._id },
       redirect: "/homepage", // Redirect to homepage
     });
   } catch (error) {
@@ -126,6 +126,22 @@ export const isAuthenticatedUser = async (req, res) => {
     });
   }
 };
+
+
+export const getUserInfo = async (req, res) => {
+  if (req.session && req.session.user) {
+    res.status(200).json({
+      success: true,
+      user: req.session.user
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      message: 'Not authenticated'
+    });
+  }
+}
+
 
 
 
