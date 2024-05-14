@@ -17,7 +17,7 @@ export const getAllHashTag = async (req, res) => {
     // extract hashtags from each tweet
     const allHashtags = tweets.map((tweet) => tweet.hashtags);
 
-    console("all hash", allHashtags);
+    console.log("all hash", allHashtags);
 
     res.json({ hashtags: allHashtags });
   } catch (error) {

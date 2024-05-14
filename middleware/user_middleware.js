@@ -115,7 +115,8 @@ export const isAuthenticatedUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Login successful.",
-      user: { username: user.username, userId: user._id },
+      user: { username: user.username },
+      userId: user._id,
       redirect: "/homepage", // Redirect to homepage
     });
   } catch (error) {
