@@ -1,4 +1,5 @@
 import express from "express";
+import { mongoose } from "mongoose";
 import bodyParser from "body-parser";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
@@ -10,6 +11,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import profileRoute from "./routers/profileRoute.js";
 import trendRouter from "./routers/trendRoute.js";
+import authRouter from "./routers/auth_router.js"
 /* import userRouter from "./routers/user_router.js"; */
 
 const app = express();
@@ -70,8 +72,8 @@ app.use("/", authRouter); //this is the entry of the app and so must have the ro
 app.use("/tweet", tweetRouter);
 app.use("/search", searchRoute);
 app.use("/comments", commentsRoute);
-app.use("/trend", trendRouter);
-app.use("/profile", profileRoute);
+app.use("/trends", trendRouter);
+app.use("/users", profileRoute);
 app.use("/posts", postsRoute);
 
 export default app;

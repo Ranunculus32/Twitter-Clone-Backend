@@ -94,7 +94,6 @@ export const isAuthenticatedUser = async (req, res) => {
       });
     }
 
-
     // Synchronously compare the plaintext password with the hashed password
     const isPasswordMatched = compareSync(password, user.password);
     if (!isPasswordMatched) {
@@ -108,6 +107,7 @@ export const isAuthenticatedUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Login successful.",
+      userId: user._id, // Corrected from user.userId to user._id
       redirect: "/homepage", // Redirect to homepage
     });
   } catch (error) {
@@ -118,6 +118,7 @@ export const isAuthenticatedUser = async (req, res) => {
     });
   }
 };
+
 
 
 export const logoutUser = (req, res, next) => {
