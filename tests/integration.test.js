@@ -19,14 +19,14 @@ afterEach(async () => {
 });
 
 test("Login user with wrong credentials", async () => {
-  const res = await api.post("/users/login").send({
+  const res = await api.post("/login").send({
     username: "wrongusername",
     password: "wrongpassword",
   });
 
   expect(res.statusCode).toBe(401);
   expect(res.body.success).toBe(false);
-  expect(res.body.message).toBe("Incorrect username or password");
+  expect(res.body.message).toBe("Invalid username or password.");
 });
 
 test("get all users", async () => {
@@ -40,7 +40,7 @@ test("get all tweets", async () => {
 });
 
 test("Login user with wrong data", async () => {
-  const res = await api.post("/users/login").send({
+  const res = await api.post("/login").send({
     email: "nimmy@gmail.com",
     password: "tuwewi",
   });
@@ -116,7 +116,7 @@ test("Add a follower to a user", async () => {
 });
 
 test("Test to register user with not passing required fields", async () => {
-  const res = await api.post("/users/register").send({
+  const res = await api.post("/register").send({
     username: "raj123",
     password: "raj123",
     email: "raj123@yahoo.com",
@@ -126,6 +126,6 @@ test("Test to register user with not passing required fields", async () => {
   expect(res.statusCode).toBe(400);
   expect(res.body).toStrictEqual({
     success: false,
-    message: "All required fields must be provided.",
+    message: "Fill the required areas.",
   });
 });
