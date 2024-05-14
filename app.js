@@ -69,7 +69,7 @@ if (process.env.NODE_ENV !== "test") {
 // Routing setup
 
 app.use("/", authRouter); //this is the entry of the app and so must have the root path
-app.use("/tweet", tweetRouter);
+app.use("/tweets", tweetRouter);
 app.use("/search", searchRoute);
 app.use("/comments", commentsRoute);
 app.use("/trends", trendRouter);
