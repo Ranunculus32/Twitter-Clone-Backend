@@ -35,7 +35,7 @@ const Login = () => {
         console.log("Login successful");
         // eslint-disable-next-line no-unused-vars
         const userId = response.data.userId; // Get user ID from response (if applicable)
-        navigate(`/homepage`); // Redirect to the user's profile page
+        navigate(`/home`); // Redirect to the user's profile page
       } else {
         setError("Login failed. Please check your credentials.");
       }
