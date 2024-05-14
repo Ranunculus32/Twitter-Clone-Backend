@@ -2,8 +2,20 @@ import express from "express";
 import Post from "../models/Post.js";
 import User from "../models/user_model.js";
 import Comment from "../models/Comment.js";
+import axios from "axios";
 
 const router = express.Router();
+
+// dog image (cors policy doesnt allow it on frontend side)
+router.get('/random-dog-image', async (req, res) => {
+    try {
+        const response = await axios.get('https://dog.ceo/api/breeds/image/random');
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching random dog image:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 // Route to create a new post
 router.post('/create/:userId', async (req, res) => {

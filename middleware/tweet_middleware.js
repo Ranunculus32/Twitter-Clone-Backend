@@ -1,6 +1,5 @@
 import tweetModel from "../models/tweet_model.js";
-import userModel from "../models/user_model.js";
-
+import User from "../models/user_model.js";
 // Controller function to create a new tweet
 export const createTweet = async (req, res) => {
   try {
@@ -12,7 +11,7 @@ export const createTweet = async (req, res) => {
     const userId = req.session.user.userId;
 
     // Retrieve user profile data
-    const user = await userModel.findById(userId);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

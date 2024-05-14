@@ -24,7 +24,7 @@ const MongoDBStoreSession = MongoDBStore(session);
 // Middleware
 app.use(bodyParser.json()); // Parse application/json
 app.use(bodyParser.urlencoded({ extended: false })); // Parse application/x-www-form-urlencoded
-app.use(cors());
+/* app.use(cors()); */
 
 // Session and Flash Middleware
 const store = new MongoDBStoreSession({
@@ -32,9 +32,8 @@ const store = new MongoDBStoreSession({
   collection: "sessions",
 });
 
-// Middleware setup
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+
+/* app.use(cors()); */
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -43,6 +42,7 @@ app.use(
     credentials: true,
   })
 );
+
 
 app.use(
   session({
