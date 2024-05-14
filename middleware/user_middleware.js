@@ -56,6 +56,7 @@ export const isRegisterUser = async (req, res) => {
     const newUser = new User({
       username,
       password: hashedPassword, // Store the hashed password
+      password: hashedPassword, // Store the hashed password
       email,
       fullName,
       profession,
@@ -85,6 +86,7 @@ export const isRegisterUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error during registration.",
+      message: "Server error during registration.",
     });
   }
 };
@@ -99,6 +101,7 @@ export const isAuthenticatedUser = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Invalid username or password.",
+        message: "Invalid username or password.",
       });
     }
 
@@ -107,6 +110,7 @@ export const isAuthenticatedUser = async (req, res) => {
     if (!isPasswordMatched) {
       return res.status(401).json({
         success: false,
+        message: "Invalid username or password.",
         message: "Invalid username or password.",
       });
     }
@@ -121,8 +125,10 @@ export const isAuthenticatedUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error during login:", error);
+    console.error("Error during login:", error);
     res.status(500).json({
       success: false,
+      message: "Server error during login.",
       message: "Server error during login.",
     });
   }

@@ -53,6 +53,17 @@ app.use(
   })
 );
 
+// Routes
+
+app.use("/", authRouter); //this is the entry of the app and so must have the root path
+app.use("/tweets", tweetRouter);
+app.use("/search", searchRoute);
+app.use("/comments", commentsRoute);
+app.use("/users", profileRoute);
+app.use("/posts", postsRoute);
+app.use("/comment", commentsRoute);
+app.use("/tweets/trends", trendRouter);
+
 // Connect to MongoDB only in non-test environments
 if (process.env.NODE_ENV !== "test") {
   mongoose
@@ -66,14 +77,6 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
-// Routing setup
 
-app.use("/", authRouter); //this is the entry of the app and so must have the root path
-app.use("/tweets", tweetRouter);
-app.use("/search", searchRoute);
-app.use("/comments", commentsRoute);
-app.use("/trends", trendRouter);
-app.use("/users", profileRoute);
-app.use("/posts", postsRoute);
 
 export default app;

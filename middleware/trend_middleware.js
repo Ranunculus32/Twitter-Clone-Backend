@@ -7,6 +7,18 @@ export const getAllTweets = async (req, res) => {
   res.status(200).json(tweets);
 };
 
+export const getOwnTweets = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const tweets = await tweetModel.find({ userId: userId });
+    res.json(tweets);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 //get all the hashtag
 
 export const getAllHashTag = async (req, res) => {
