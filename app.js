@@ -66,7 +66,7 @@ app.use("/tweets", tweetRouter);
 app.use("/search", searchRoute);
 app.use("/comments", commentsRoute);
 app.use("/trend", trendRouter);
-app.use("/profile", profileRoute);
+app.use("/users", profileRoute);
 app.use("/posts", postsRoute);
 
 export default app;

@@ -117,6 +117,7 @@ export const isAuthenticatedUser = async (req, res) => {
   }
 };
 
+
 export const logoutUser = (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
