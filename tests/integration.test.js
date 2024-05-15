@@ -34,8 +34,8 @@ test("get all users", async () => {
   expect(res.statusCode).toBe(200);
 });
 
-test("get all tweets", async () => {
-  const res = await api.get("/tweets/");
+test("get most trending hashtags", async () => {
+  const res = await api.get("/tweets/trends/hashtags/most");
   expect(res.statusCode).toBe(200);
 });
 
@@ -126,6 +126,6 @@ test("Test to register user with not passing required fields", async () => {
   expect(res.statusCode).toBe(400);
   expect(res.body).toStrictEqual({
     success: false,
-    message: "Fill the required areas.",
+    message: "Required fields missing: profession, hometown, description.",
   });
 });
