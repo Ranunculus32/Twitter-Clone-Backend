@@ -103,11 +103,7 @@ export const isAuthenticatedUser = async (req, res) => {
     }
     req.session.user = { username, userId: user._id };
 
-    res.status(200).json({
-      success: true,
-      message: "Login successful.",
-      redirect: "/homepage", // Redirect to homepage
-    });
+    res.status(200).json(user);
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({
