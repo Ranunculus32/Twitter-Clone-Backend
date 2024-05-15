@@ -1,17 +1,17 @@
 import express from "express";
-import { mongoose } from "mongoose";
 import bodyParser from "body-parser";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
+import dotenv from "dotenv";
+import cors from "cors";
+import mongoose from "mongoose";
+import authRouter from "./routers/user_router.js";
 import searchRoute from "./routers/SearchRoute.js";
 import postsRoute from "./routers/PostRoute.js";
 import commentsRoute from "./routers/CommentRoute.js";
 import tweetRouter from "./routers/tweet_router.js";
-import dotenv from "dotenv";
-import cors from "cors";
 import profileRoute from "./routers/profileRoute.js";
 import trendRouter from "./routers/trendRoute.js";
-import authRouter from "./routers/auth_router.js"
 /* import userRouter from "./routers/user_router.js"; */
 
 const app = express();
@@ -76,7 +76,6 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`Backend server is running on port ${port}!`);
   });
 }
-
 
 
 export default app;
