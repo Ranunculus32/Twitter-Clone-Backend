@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
-import authRouter from "./routers/auth_router.js";
+import authRouter from "./routers/user_router.js";
 import searchRoute from "./routers/SearchRoute.js";
 import postsRoute from "./routers/PostRoute.js";
 import commentsRoute from "./routers/CommentRoute.js";
@@ -62,11 +62,13 @@ if (process.env.NODE_ENV !== "test") {
 // Routing setup
 
 app.use("/", authRouter); //this is the entry of the app and so must have the root path
-app.use("/tweet", tweetRouter);
+app.use("/tweets", tweetRouter);
 app.use("/search", searchRoute);
 app.use("/comments", commentsRoute);
-app.use("/trend", trendRouter);
-app.use("/profile", profileRoute);
+app.use("/tweets/trends", trendRouter);
+app.use("/users", profileRoute);
 app.use("/posts", postsRoute);
+
+
 
 export default app;
