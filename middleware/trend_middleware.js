@@ -26,6 +26,19 @@ export const getAllHashTag = async (req, res) => {
   }
 };
 
+//function to get own tweets
+export const getOwnTweets = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const tweets = await tweetModel.find({ userId: userId });
+    res.json(tweets);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // Route  to get most occurring hashtags
 export const getMostOccurringHashtags = async (req, res) => {
   try {
