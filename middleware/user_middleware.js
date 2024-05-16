@@ -74,9 +74,7 @@ export const isRegisterUser = async (req, res) => {
       redirect: "/login",
     });
   } catch (error) {
-
     if (error.code === 11000 && error.keyPattern && error.keyPattern.username) {
-
       return res.status(400).json({
         success: false,
         message: "Username is already registered.",
@@ -86,11 +84,9 @@ export const isRegisterUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error during registration.",
-      message: "Server error during registration.",
     });
   }
 };
-
 
 export const isAuthenticatedUser = async (req, res) => {
   try {
@@ -101,7 +97,6 @@ export const isAuthenticatedUser = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Invalid username or password.",
-        message: "Invalid username or password.",
       });
     }
 
@@ -111,24 +106,24 @@ export const isAuthenticatedUser = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Invalid username or password.",
-        message: "Invalid username or password.",
       });
     }
 
     req.session.user = { username: user.username, userId: user._id }; // Set session data
+    const userId = user._id;
+    console.log("userId:", userId); // Log userId
+
     res.status(200).json({
       success: true,
       message: "Login successful.",
       user: { username: user.username },
-      userId: user._id,
+      userId: userId,
       redirect: "/homepage", // Redirect to homepage
     });
   } catch (error) {
     console.error("Error during login:", error);
-    console.error("Error during login:", error);
     res.status(500).json({
       success: false,
-      message: "Server error during login.",
       message: "Server error during login.",
     });
   }
@@ -139,18 +134,15 @@ export const getUserInfo = async (req, res) => {
   if (req.session && req.session.user) {
     res.status(200).json({
       success: true,
-      user: req.session.user
+      user: req.session.user,
     });
   } else {
     res.status(401).json({
       success: false,
-      message: 'Not authenticated'
+      message: "Not authenticated",
     });
   }
-}
-
-
-
+};
 
 export const logoutUser = (req, res, next) => {
   req.session.destroy((err) => {
