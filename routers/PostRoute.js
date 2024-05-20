@@ -1,6 +1,5 @@
 import express from "express";
 import Post from "../models/Post.js";
-import User from "../models/user_model.js";
 import Comment from "../models/Comment.js";
 import axios from "axios";
 
@@ -21,9 +20,9 @@ router.get('/random-dog-image', async (req, res) => {
 router.post('/create/:userId', async (req, res) => {
     try {
 
-        const { userId } = req.params;
+        const { userId, content } = req.body;
         const newPost = new Post({
-            content: req.body.content,
+            content,
             userId
         });
         const savedPost = await newPost.save();

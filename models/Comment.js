@@ -18,18 +18,16 @@ const commentSchema = new Schema({
         type: String,
         required: true,
     },
-    reply: [{
-        userId: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: true,
-        },
-        content: {
-            type: String,
-            required: true,
-        },
-
-    }],
+    reply: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ],
+    isReply: {
+        type: Boolean,
+        default: false,
+    }
 
     /*    likes: {
            type: Number,

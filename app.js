@@ -58,10 +58,9 @@ app.use(
 app.use("/", authRouter); //this is the entry of the app and so must have the root path
 app.use("/tweets", tweetRouter);
 app.use("/search", searchRoute);
-app.use("/comments", commentsRoute);
+app.use("/comment", commentsRoute);
 app.use("/users", profileRoute);
 app.use("/posts", postsRoute);
-app.use("/comment", commentsRoute);
 app.use("/tweets/trends", trendRouter);
 
 // Connect to MongoDB only in non-test environments
