@@ -98,4 +98,65 @@ router.get('/:postId', async (req, res) => {
     }
 });
 
+// Route to delete a comment
+router.delete('/:commentId', async (req, res) => {
+    try {
+        const { commentId } = req.params;
+
+        // Find and delete the comment
+        const comment = await Comment.findByIdAndDelete(commentId);
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        if (comment.isReply) {
+            const parentComment = await Comment.findById(comment.replyTo);
+            if (parentComment) {
+                parentComment.reply.pull(commentId);
+                await parentComment.save();
+            }
+        } else {
+
+            const post = await Post.findById(comment.postId);
+            if (post) {
+                post.comments.pull(commentId);
+                await post.save();
+            }
+
+            await Comment.deleteMany({ _id: { $in: comment.reply } });
+        }
+
+        res.status(200).json({ message: 'Comment deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting comment:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to delete a reply
+router.delete('/:commentId/reply/:replyId', async (req, res) => {
+    try {
+        const { commentId, replyId } = req.params;
+
+        // Find and delete the reply
+        const reply = await Comment.findByIdAndDelete(replyId);
+        if (!reply) {
+            return res.status(404).json({ error: 'Reply not found' });
+        }
+
+        // Remove the reply from the parent comment
+        const parentComment = await Comment.findById(commentId);
+        if (parentComment) {
+            parentComment.reply.pull(replyId);
+            await parentComment.save();
+        }
+
+        res.status(200).json({ message: 'Reply deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting reply:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 export default router;
