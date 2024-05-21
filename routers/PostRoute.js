@@ -1,5 +1,6 @@
 import express from "express";
 import Post from "../models/Post.js";
+import User from "../models/user_model.js";
 import Comment from "../models/Comment.js";
 import axios from "axios";
 
@@ -84,4 +85,29 @@ router.get('/', async (req, res) => {
     }
 });
 
+// route to get post from followed users
+router.get('/followingPosts/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Get the list of users the current user is following
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+
+        const followingIds = user.following.map(followingUser => followingUser.followingId);
+
+
+        const posts = await Post.find({ userId: { $in: followingIds } })
+            .populate('userId', 'username fullName')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error('Error fetching following posts:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 export default router;

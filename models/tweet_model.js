@@ -7,7 +7,9 @@ const tweetSchema = new mongoose.Schema({
     type: String,
   },
   userId: {
-    type:String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   content: {
     type: String,
@@ -15,15 +17,15 @@ const tweetSchema = new mongoose.Schema({
     maxlength: 280
   },
   likes: {
-    type:Number,
-    default:0
+    type: Number,
+    default: 0
   },
 
-  comments: {
-    type:Number,
-    default:0
-  },
-
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
+    }],
   createdAt: {
     type: Date,
     default: Date.now

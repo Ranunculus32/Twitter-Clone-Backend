@@ -1,13 +1,14 @@
 import express from "express";
 import Comment from "../models/Comment.js";
-import Post from "../models/Post.js";
+import Tweet from "../models/tweet_model.js";
+/* import Post from "../models/Post.js"; */
 
 const router = express.Router();
 
 // Route to create a new comment on a post
 router.post('/:postId', async (req, res) => {
     try {
-        const { content, userId, username } = req.body;
+        const { content, userId } = req.body;
         const { postId } = req.params;
 
         if (!userId || !postId || !content) {
@@ -18,17 +19,23 @@ router.post('/:postId', async (req, res) => {
             content,
             postId,
             userId,
-            username,
             reply: []
         });
 
         const savedComment = await newComment.save();
 
-        const post = await Post.findById(postId);
+        const post = await Tweet.findById(postId);
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });
         }
+
+        console.log('Post before pushing comment:', post); // Add this line for debugging
+
+        if (!post.comments) {
+            post.comments = []; // Initialize comments array if it doesn't exist
+        }
         post.comments.push(savedComment._id);
+
         await post.save();
 
         res.status(201).json(savedComment);
@@ -37,8 +44,6 @@ router.post('/:postId', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-
 // Route to reply on a comment
 router.post('/:commentId/reply', async (req, res) => {
     try {
@@ -117,7 +122,7 @@ router.delete('/:commentId', async (req, res) => {
             }
         } else {
 
-            const post = await Post.findById(comment.postId);
+            const post = await Tweet.findById(comment.postId);
             if (post) {
                 post.comments.pull(commentId);
                 await post.save();

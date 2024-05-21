@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 const commentSchema = new Schema({
     postId: {
         type: Schema.Types.ObjectId,
-        ref: 'Post',
+        ref: 'Tweet',  // Reference the Tweet model instead of Post
         required: true,
     },
     userId: {
