@@ -19,11 +19,9 @@ const tweetSchema = new mongoose.Schema({
     default:0
   },
 
-  comments: {
-    type:Number,
-    default:0
-  },
-
+  comments:[{
+    type: String
+  }],
   createdAt: {
     type: Date,
     default: Date.now
