@@ -7,18 +7,6 @@ export const getAllTweets = async (req, res) => {
   res.status(200).json(tweets);
 };
 
-export const getOwnTweets = async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const tweets = await tweetModel.find({ userId: userId });
-    res.json(tweets);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
 //get all the hashtag
 
 export const getAllHashTag = async (req, res) => {
@@ -29,12 +17,25 @@ export const getAllHashTag = async (req, res) => {
     // extract hashtags from each tweet
     const allHashtags = tweets.map((tweet) => tweet.hashtags);
 
-    console("all hash", allHashtags);
+    console.log("all hash", allHashtags);
 
     res.json({ hashtags: allHashtags });
   } catch (error) {
     console.error("Error fetching hashtags:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//function to get own tweets
+export const getOwnTweets = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const tweets = await tweetModel.find({ userId: userId });
+    res.json(tweets);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

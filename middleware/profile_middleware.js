@@ -10,6 +10,12 @@ export const getAllUsers = async (req, res) => {
 // Function to get a single user by id
 export const getOneUser = async (req, res) => {
   const { id } = req.params;
+
+  // Check if id is provided
+  if (!id) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+  
   try {
     // Find a user with the given id from db and pass as JSON response
     const foundedUser = await User.findOne({ _id: id });

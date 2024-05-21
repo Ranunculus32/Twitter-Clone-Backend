@@ -26,7 +26,7 @@ test("Login user with wrong credentials", async () => {
 
   expect(res.statusCode).toBe(401);
   expect(res.body.success).toBe(false);
-  expect(res.body.message).toBe("Incorrect username or password");
+  expect(res.body.message).toBe("Invalid username or password.");
 });
 
 test("get all users", async () => {
@@ -34,8 +34,8 @@ test("get all users", async () => {
   expect(res.statusCode).toBe(200);
 });
 
-test("get all tweets", async () => {
-  const res = await api.get("/tweets/");
+test("get most trending hashtags", async () => {
+  const res = await api.get("/tweets/trends/hashtags/most");
   expect(res.statusCode).toBe(200);
 });
 
@@ -126,6 +126,6 @@ test("Test to register user with not passing required fields", async () => {
   expect(res.statusCode).toBe(400);
   expect(res.body).toStrictEqual({
     success: false,
-    message: "All required fields must be provided.",
+    message: "Required fields missing: profession, hometown, description.",
   });
 });

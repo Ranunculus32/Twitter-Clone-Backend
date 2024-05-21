@@ -2,8 +2,20 @@ import express from "express";
 import Post from "../models/Post.js";
 import User from "../models/user_model.js";
 import Comment from "../models/Comment.js";
+import axios from "axios";
 
 const router = express.Router();
+
+// dog image (cors policy doesnt allow it on frontend side)
+router.get('/random-dog-image', async (req, res) => {
+    try {
+        const response = await axios.get('https://dog.ceo/api/breeds/image/random');
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching random dog image:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 // Route to create a new post
 router.post('/create/:userId', async (req, res) => {
@@ -54,6 +66,7 @@ router.get("/:id", async (req, res) => {
 
 
 // GET all posts 
+
 router.get('/', async (req, res) => {
     try {
         const posts = await Post.find()
@@ -64,13 +77,6 @@ router.get('/', async (req, res) => {
                     select: 'username fullName' // Populate userId with username and fullName
                 }
             })
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'userId', // Populate comments with username
-                    select: 'username'
-                }
-            })
             .populate('userId', 'username fullName');
         res.status(200).json(posts);
     } catch (error) {
@@ -78,6 +84,5 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 
 export default router;

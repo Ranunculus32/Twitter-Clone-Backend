@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-node_modules
-=======
+
 # Dependency directories
-node_modules/
+node_modules
 
 
 # Environment variables file
@@ -16,7 +14,4 @@ node_modules/
 .idea/
 *.iml
 
-
-# Build files
-
->>>>>>> origin/main
+frontend/

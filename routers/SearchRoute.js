@@ -11,7 +11,7 @@ import User from "../models/user_model.js";
 const router = express.Router();
 
 
-router.get('/search', async (req, res) => {
+router.get('/', async (req, res) => {
 
 
     let query = req.query.q;

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -33,15 +32,13 @@ const userSchema = new mongoose.Schema({
   },
   website: {
     type: String,
-
   },
   followers: {
-    type: [],
+    type: Array,
   },
   following: {
-    type: [],
+    type: Array,
   },
-
   createdAt: {
     type: Date,
     default: Date.now,

@@ -1,112 +1,99 @@
 import tweetModel from "../models/tweet_model.js";
-import userModel from "../models/user_model.js";
+
 
 // Controller function to create a new tweet
 export const createTweet = async (req, res) => {
   try {
-    // Ensure user is authenticated
-    if (!req.session || !req.session.user || !req.session.user.userId) {
-      return res.status(401).json({ message: "User not authenticated" });
-    }
 
-    const userId = req.session.user.userId;
+    const { content, userId, username } = req.body;
 
-    // Retrieve user profile data
-    const user = await userModel.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Extract content from request body
-    const { username } = user;
-    const { content } = req.body;
-
-    // Validate content
-    if (!content) {
-      return res.status(400).json({ message: "Content is required" });
-    }
-
-    // Extract hashtags
     const hashtags = content.match(/#[a-zA-Z0-9_]+/g) || [];
 
-    // Create tweet with profile data
+    // Create a new tweet
     const newTweet = new tweetModel({
-      username,
       userId,
+      username: username,
       content,
       hashtags,
     });
 
+    // Save the tweet to the database
     await newTweet.save();
+
+    // Send the created tweet as response
     res.status(201).json(newTweet);
   } catch (error) {
-    console.error("Error creating tweet:", error);
-    res
-      .status(500)
-      .json({ message: "Error creating tweet", error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-};
+}
 
-export const getTweetById = async (req, res) => {
+// Controller function to get all posts
+export const getAllPosts = async (req, res) => {
   try {
-    const tweetId = req.params.id; // Assuming the tweet ID is passed in the request parameters
+    const tweets = await tweetModel.find();
+    res.status(200).json(tweets);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 
-    const tweet = await tweetModel.findById(tweetId);
+// Controller function to get a post by ID
+export const getPostById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tweet = await tweetModel.findById(id);
+
     if (!tweet) {
-      return res.status(404).json({ message: "Tweet not found" });
+      return res.status(404).json({ error: 'Tweet not found' });
     }
 
     res.status(200).json(tweet);
   } catch (error) {
-    console.error("Error fetching tweet:", error);
-    res
-      .status(500)
-      .json({ message: "Error fetching tweet", error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-};
-
-// Controller function to delete a post by ID
-export const deleteTweetById = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const tweet = await tweetModel.findById(id);
-    if (!tweet) {
-      return res.status(404).json({ message: "Tweet not found" });
-    }
-
-    await tweet.delete();
-    res.status(200).json({ message: "Tweet deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting tweet by ID:", error);
-    res
-      .status(500)
-      .json({ message: "Error deleting tweet by ID", error: error.message });
-  }
-};
+}
 
 // Controller function to edit a post by ID
-export const editTweetById = async (req, res) => {
+export const editById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { content } = req.body;
+    const { content, userId, username } = req.body;
 
-    if (!content) {
-      return res.status(400).json({ message: "Content is required" });
+    const hashtags = content.match(/#[a-zA-Z0-9_]+/g) || [];
+
+    const updatedTweet = await tweetModel.findByIdAndUpdate(
+      id,
+      { content, userId, username, hashtags },
+      { new: true }
+    );
+
+    if (!updatedTweet) {
+      return res.status(404).json({ error: 'Tweet not found' });
     }
 
-    const tweet = await tweetModel.findById(id);
-    if (!tweet) {
-      return res.status(404).json({ message: "Tweet not found" });
-    }
-
-    tweet.content = content;
-    await tweet.save();
-    res.status(200).json(tweet);
+    res.status(200).json(updatedTweet);
   } catch (error) {
-    console.error("Error editing tweet by ID:", error);
-    res
-      .status(500)
-      .json({ message: "Error editing tweet by ID", error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-};
+}
+
+// Controller function to delete a post by ID
+export const deleteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedTweet = await tweetModel.findByIdAndDelete(id);
+
+    if (!deletedTweet) {
+      return res.status(404).json({ error: 'Tweet not found' });
+    }
+
+    res.status(200).json({ message: 'Tweet deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
