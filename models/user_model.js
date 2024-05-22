@@ -33,12 +33,18 @@ const userSchema = new mongoose.Schema({
   website: {
     type: String,
   },
-  followers: [{
-    followerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-  }],
-  following: [{
-    followingId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-  }],
+  followers: {
+    type: Array,
+  },
+  following: {
+    type: Array,
+  },
+  /*   followers: [{
+      followerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    }],
+    following: [{
+      followingId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    }], */
   createdAt: {
     type: Date,
     default: Date.now,
