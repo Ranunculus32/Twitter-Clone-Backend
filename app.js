@@ -36,7 +36,7 @@ const store = new MongoDBStoreSession({
 /* app.use(cors()); */
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://x-twitter-clone-react.netlify.app/"],
+    origin: ["http://localhost:5173", "http://twitterx-clone-project.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
